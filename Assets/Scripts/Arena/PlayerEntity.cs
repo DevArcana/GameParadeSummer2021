@@ -6,14 +6,17 @@ namespace Arena
     {
         private Camera _camera;
 
+        private bool _canMove = false;
+        
         private void Start()
         {
             _camera = Camera.main;
+            _canMove = true;
         }
 
         private void Update()
         {
-            if (!TurnManager.Instance.IsPlayerTurn())
+            if (!_canMove || !TurnManager.Instance.IsPlayerTurn())
             {
                 return;
             }
@@ -24,8 +27,12 @@ namespace Arena
                 {
                     if (GameArena.Instance.Move(this, hit.point, out var cellPos))
                     {
-                        Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f));
-                        TurnManager.Instance.NextTurn();
+                        _canMove = false;
+                        StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
+                        {
+                            _canMove = true;
+                            TurnManager.Instance.NextTurn();
+                        }));
                     }
                 }
             }
