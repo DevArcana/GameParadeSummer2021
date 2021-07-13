@@ -28,10 +28,15 @@ namespace Arena
                     if (GameArena.Instance.Move(this, hit.point, out var cellPos))
                     {
                         _canMove = false;
+                        
                         StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
                         {
                             _canMove = true;
-                            TurnManager.Instance.NextTurn();
+
+                            if (TurnManager.Instance.ActionPoints == 0)
+                            {
+                                TurnManager.Instance.FinishTurn();
+                            }
                         }));
                     }
                 }

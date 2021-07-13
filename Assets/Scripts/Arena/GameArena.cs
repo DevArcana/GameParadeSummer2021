@@ -32,6 +32,11 @@ namespace Arena
             {
                 return false;
             }
+
+            if (!TurnManager.Instance.SpendPoint())
+            {
+                return false;
+            }
             
             _grid[x, y] = entity;
             targetCellPos = _grid.GridToWorld(x, y);
