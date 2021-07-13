@@ -8,7 +8,8 @@ namespace Arena
     {
         public static GameArena Instance { get; private set; }
 
-        private Grid<GridEntity> _grid;
+        public Grid<GridEntity> Grid { get; private set; }
+        
         private Camera _camera;
 
         private void Awake()
@@ -19,16 +20,16 @@ namespace Arena
         private void Start()
         {
             _camera = Camera.main;
-            _grid = new Grid<GridEntity>(7, 7, 1.0f, transform.position - new Vector3(3.5f, 0.0f, 3.5f));
+            Grid = new Grid<GridEntity>(7, 7, 1.0f, transform.position - new Vector3(3.5f, 0.0f, 3.5f));
         }
 
         public bool Move(GridEntity entity, Vector3 pos, out Vector3 targetCellPos)
         {
             targetCellPos = Vector3.zero;
             
-            _grid.WorldToGrid(pos, out var x, out var y);
+            Grid.WorldToGrid(pos, out var x, out var y);
 
-            if (!_grid.IsWithinGrid(x, y) || !(_grid[x, y] is null))
+            if (!Grid.IsWithinGrid(x, y) || !(Grid[x, y] is null))
             {
                 return false;
             }
@@ -38,18 +39,18 @@ namespace Arena
                 return false;
             }
             
-            _grid[x, y] = entity;
-            targetCellPos = _grid.GridToWorld(x, y);
+            Grid[x, y] = entity;
+            targetCellPos = Grid.GridToWorld(x, y);
 
-            _grid.WorldToGrid(entity.transform.position, out x, out y);
-            _grid[x, y] = null;
+            Grid.WorldToGrid(entity.transform.position, out x, out y);
+            Grid[x, y] = null;
             
             return true;
         }
 
         private void OnDrawGizmos()
         {
-            if (_grid is null)
+            if (Grid is null)
             {
                 return;
             }
@@ -59,12 +60,12 @@ namespace Arena
             
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit))
             {
-                _grid.WorldToGrid(hit.point, out x, out y);
+                Grid.WorldToGrid(hit.point, out x, out y);
             }
 
-            foreach (var (gx, gy, g) in _grid)
+            foreach (var (gx, gy, g) in Grid)
             {
-                var pos = _grid.GridToWorld(gx, gy) + new Vector3(0.5f, 0.0f, 0.5f);
+                var pos = Grid.GridToWorld(gx, gy) + new Vector3(0.5f, 0.0f, 0.5f);
                 
                 if (gx == x && gy == y)
                 {
@@ -79,13 +80,13 @@ namespace Arena
 
         public void Register(GridEntity entity)
         {
-            _grid.WorldToGrid(entity.transform.position, out var x, out var y);
+            Grid.WorldToGrid(entity.transform.position, out var x, out var y);
 
-            if (_grid.IsWithinGrid(x, y))
+            if (Grid.IsWithinGrid(x, y))
             {
-                if (_grid[x, y] is null)
+                if (Grid[x, y] is null)
                 {
-                    _grid[x, y] = entity;
+                    Grid[x, y] = entity;
                 }
                 else
                 {
