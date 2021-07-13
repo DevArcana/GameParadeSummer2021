@@ -41,7 +41,7 @@ namespace Controls
         {
             if (Physics.Raycast(new Ray(_origin, Vector3.down), out var hit))
             {
-                _origin = hit.point;
+                _origin = hit.point + Vector3.up * 0.25f;
             }
         }
 
