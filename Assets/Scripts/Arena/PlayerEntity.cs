@@ -8,8 +8,9 @@ namespace Arena
 
         private bool _canMove = false;
         
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             _camera = Camera.main;
             _canMove = true;
         }
