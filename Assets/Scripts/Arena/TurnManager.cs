@@ -90,6 +90,11 @@ namespace Arena
         public void Enqueue(GridEntity entity)
         {
             Entities.Enqueue(entity);
+
+            if (Entities.Count == 1)
+            {
+                OnTurnChanged(null, entity);
+            }
         }
     }
 }
