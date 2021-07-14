@@ -31,10 +31,7 @@ namespace Interface
         private void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)
         {
             var anim = _queue.Dequeue();
-            //anim.transform.SetParent(null);
-            //anim.ResetTrigger(TriggerDestroy);
             anim.SetTrigger(TriggerDestroy);
-            Debug.Log("ANimt");
 
             var prefab = enemyIndicatorPrefab;
             if (args.LastTurn is PlayerEntity)
