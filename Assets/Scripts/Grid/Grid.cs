@@ -50,6 +50,22 @@ namespace Grid
             return IsWithinGrid(x, y);
         }
 
+        public IEnumerable<Vector2Int> GetAvailableNeighbours(int x, int y)
+        {
+            var availableNeighbours = new List<Vector2Int>();
+            
+            if (IsWithinGrid(x - 1, y) && GetValue(x - 1, y) is null)
+                availableNeighbours.Add(new Vector2Int(x - 1, y));
+            if (IsWithinGrid(x + 1, y) && GetValue(x + 1, y) is null)
+                availableNeighbours.Add(new Vector2Int(x + 1, y));
+            if (IsWithinGrid(x, y - 1) && GetValue(x, y - 1) is null)
+                availableNeighbours.Add(new Vector2Int(x, y - 1));
+            if (IsWithinGrid(x, y + 1) && GetValue(x, y + 1) is null)
+                availableNeighbours.Add(new Vector2Int(x, y + 1));
+
+            return availableNeighbours;
+        }
+
         public void WorldToGrid(Vector3 worldPos, out int x, out int y)
         {
             x = Mathf.FloorToInt((worldPos - _origin).x / _cellSize);

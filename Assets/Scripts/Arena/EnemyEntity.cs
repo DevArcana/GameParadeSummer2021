@@ -1,11 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
 
 namespace Arena
 {
     public class EnemyEntity : GridEntity
     {
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             TurnManager.Instance.TurnChanged += OnTurnChanged;
         }
 
@@ -15,12 +19,18 @@ namespace Arena
 
             if (args.CurrentTurn == this)
             {
-                GameArena.Instance.Grid.WorldToGrid(transform.position, out var x, out var y);
+                var position = transform.position;
                 
-                // StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
-                // {
-                //     TurnManager.Instance.FinishTurn();
-                // }));
+                GameArena.Instance.Grid.WorldToGrid(position, out var x, out var y);
+
+                var moves = GameArena.Instance.Grid.GetAvailableNeighbours(x, y).ToList();
+                var move = moves.ElementAt(Random.Range(0, moves.Count));
+
+                GameArena.Instance.Move(this, GameArena.Instance.Grid.GridToWorld(move.x, move.y), out var cellPos);
+                StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, position.y, cellPos.z + 0.5f), () =>
+                {
+                    TurnManager.Instance.FinishTurn();
+                }));
             }
         }
     }
