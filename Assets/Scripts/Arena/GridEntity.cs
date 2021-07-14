@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -11,6 +12,9 @@ namespace Arena
     {
         public AudioClip[] moveSounds;
         private AudioSource _audio;
+
+        public double health;
+        public double damage;
         
         public float smoothTime = 1.0f;
         private Vector3 _velocity;
@@ -29,13 +33,24 @@ namespace Arena
                 _audio.PlayOneShot(moveSounds.OrderBy(x => Guid.NewGuid()).FirstOrDefault(x => !(x is null)));
             }
             
-            while (transform.position != pos)
+            GameArena.Instance.Grid.WorldToGrid(pos, out var x, out var y);
+            var entity = GameArena.Instance.Grid[x, y];
+            if (entity.GetType() != this.GetType())
             {
-                transform.position = Vector3.SmoothDamp(transform.position, pos, ref _velocity, smoothTime);
+                entity.health -= this.damage;
                 yield return new WaitForEndOfFrame();
+            }
+            else
+            {
+                while (transform.position != pos)
+                {
+                    transform.position = Vector3.SmoothDamp(transform.position, pos, ref _velocity, smoothTime);
+                    yield return new WaitForEndOfFrame();
+                }
             }
 
             finish?.Invoke();
         }
+        
     }
 }

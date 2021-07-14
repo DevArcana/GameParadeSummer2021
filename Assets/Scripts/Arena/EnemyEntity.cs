@@ -11,6 +11,8 @@ namespace Arena
         {
             base.Start();
             TurnManager.Instance.TurnChanged += OnTurnChanged;
+            health = 8;
+            damage = 2;
         }
 
         public void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)

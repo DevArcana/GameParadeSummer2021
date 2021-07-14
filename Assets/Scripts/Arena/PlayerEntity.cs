@@ -13,6 +13,8 @@ namespace Arena
             base.Start();
             _camera = Camera.main;
             _canMove = true;
+            health = 20;
+            damage = 4;
         }
 
         private void Update()

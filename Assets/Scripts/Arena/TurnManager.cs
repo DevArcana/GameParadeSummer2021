@@ -11,7 +11,7 @@ namespace Arena
         
         public int ActionPoints { get; private set; }
 
-        public Queue<GridEntity> Entities { get; } = new Queue<GridEntity>();
+        public Queue<GridEntity> Entities { get; set; } = new Queue<GridEntity>();
 
         public GridEntity CurrentTurn => Entities.Any() ? Entities.Peek() : null;
 

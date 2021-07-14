@@ -29,7 +29,7 @@ namespace Arena
             
             Grid.WorldToGrid(pos, out var x, out var y);
 
-            if (!Grid.IsWithinGrid(x, y) || !(Grid[x, y] is null))
+            if (!Grid.IsWithinGrid(x, y) )
             {
                 return false;
             }
@@ -37,6 +37,12 @@ namespace Arena
             if (!TurnManager.Instance.SpendPoint())
             {
                 return false;
+            }
+
+            if (!(Grid[x, y] is null))
+            {
+                targetCellPos = Grid.GridToWorld(x, y);
+                return true;
             }
             
             Grid[x, y] = entity;
