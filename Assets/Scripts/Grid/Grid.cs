@@ -124,5 +124,21 @@ namespace Grid
         {
             return GetEnumerator();
         }
+
+        public (int, int) GetPosition(T entity)
+        {
+            for (int i = 0; i < _width; i++)
+            {
+                for (int j = 0; j < _height; j++)
+                {
+                    if (entity.Equals(this[i, j]))
+                    {
+                        return (i, j);
+                    }
+                }
+            }
+
+            return (0, 0);
+        }
     }
 }

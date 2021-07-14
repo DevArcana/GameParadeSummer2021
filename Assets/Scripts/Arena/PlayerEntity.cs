@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Arena
 {
@@ -28,20 +29,28 @@ namespace Arena
             {
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
-                    if (GameArena.Instance.Move(this, hit.point, out var cellPos))
+                    GameArena.Instance.Grid.WorldToGrid(this.transform.position, out var x, out var y);
+                    var moves = GameArena.Instance.Grid.GetAvailableNeighbours(x, y).ToList();
+                    GameArena.Instance.Grid.WorldToGrid(hit.point, out x, out y);
+                    var move = new Vector2Int(x, y);
+                    if (moves.Contains(move))
                     {
-                        _canMove = false;
-                        
-                        StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
+                        if (GameArena.Instance.Move(this, hit.point, out var cellPos))
                         {
-                            _canMove = true;
-
-                            if (TurnManager.Instance.ActionPoints == 0)
+                            _canMove = false;
+                        
+                            StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
                             {
-                                TurnManager.Instance.FinishTurn();
-                            }
-                        }));
+                                _canMove = true;
+
+                                if (TurnManager.Instance.ActionPoints == 0)
+                                {
+                                    TurnManager.Instance.FinishTurn();
+                                }
+                            }));
+                        }
                     }
+                   
                 }
             }
         }
