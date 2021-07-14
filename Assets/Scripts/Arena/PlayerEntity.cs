@@ -17,7 +17,7 @@ namespace Arena
 
         private void Update()
         {
-            if (!_canMove || !TurnManager.Instance.IsPlayerTurn())
+            if (!_canMove || TurnManager.Instance.CurrentTurn != this)
             {
                 return;
             }
