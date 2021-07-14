@@ -54,13 +54,13 @@ namespace Grid
         {
             var availableNeighbours = new List<Vector2Int>();
             
-            if (IsWithinGrid(x - 1, y) && GetValue(x - 1, y) is null)
+            if (IsWithinGrid(x - 1, y))
                 availableNeighbours.Add(new Vector2Int(x - 1, y));
-            if (IsWithinGrid(x + 1, y) && GetValue(x + 1, y) is null)
+            if (IsWithinGrid(x + 1, y))
                 availableNeighbours.Add(new Vector2Int(x + 1, y));
-            if (IsWithinGrid(x, y - 1) && GetValue(x, y - 1) is null)
+            if (IsWithinGrid(x, y - 1))
                 availableNeighbours.Add(new Vector2Int(x, y - 1));
-            if (IsWithinGrid(x, y + 1) && GetValue(x, y + 1) is null)
+            if (IsWithinGrid(x, y + 1))
                 availableNeighbours.Add(new Vector2Int(x, y + 1));
 
             return availableNeighbours;
