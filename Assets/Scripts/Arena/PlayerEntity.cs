@@ -8,15 +8,16 @@ namespace Arena
 
         private bool _canMove = false;
         
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             _camera = Camera.main;
             _canMove = true;
         }
 
         private void Update()
         {
-            if (!_canMove || !TurnManager.Instance.IsPlayerTurn())
+            if (!_canMove || TurnManager.Instance.CurrentTurn != this)
             {
                 return;
             }
