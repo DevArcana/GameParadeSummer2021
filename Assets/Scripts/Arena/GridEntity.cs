@@ -19,6 +19,7 @@ namespace Arena
         {
             _audio = GetComponent<AudioSource>();
             GameArena.Instance.Register(this);
+            TurnManager.Instance.Enqueue(this);
         }
 
         public IEnumerator Move(Vector3 pos, [CanBeNull] Action finish = null)
