@@ -52,11 +52,13 @@ namespace Arena
             if (!turnManager.CanSpendActionPoints(PointsPerAction[EntityAction.Move]))
             {
                 OnActionProcessed(entity, false);
+                return;
             }
             
             if (!gameArena.CanMove(entity, position))
             {
                 OnActionProcessed(entity, false);
+                return;
             }
 
             gameArena.Move(entity, position, out var cellPosition);

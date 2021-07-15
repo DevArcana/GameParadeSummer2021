@@ -10,15 +10,15 @@ namespace Arena
         {
             base.Start();
             ActionManager.Instance.ActionProcessed += OnActionProcessed;
-            TurnManager.Instance.TurnChanged += OnTurnChanged;
+            TurnManager.Instance.TurnStarted += OnTurnStarted;
             health = maxHealth = 8;
             damage = 2;
             healthBar.SetHealth(health, maxHealth);
         }
 
-        public void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)
+        public void OnTurnStarted(object sender, TurnManager.OnTurnStartedEventArgs args)
         {
-            if (args.CurrentTurn == this)
+            if (args.Entity == this)
             {
                 MakeAction();
             }
@@ -36,19 +36,6 @@ namespace Arena
             var move = moves.ElementAt(Random.Range(0, moves.Count));
 
             ActionManager.Instance.TryMove(this, gameArena.Grid.GridToWorld(move.x, move.y));
-            
-            // GameArena.Instance.Move(this, GameArena.Instance.Grid.GridToWorld(move.x, move.y), out var cellPos);
-            // StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, position.y, cellPos.z + 0.5f), () =>
-            // {
-            //     if (TurnManager.Instance.ActionPoints == 0)
-            //     {
-            //         TurnManager.Instance.FinishTurn();
-            //     }
-            //     else
-            //     {
-            //         MakeAction();
-            //     }
-            // }));
         }
 
         private void OnActionProcessed(object sender, ActionManager.OnActionProcessedEventArgs args)
