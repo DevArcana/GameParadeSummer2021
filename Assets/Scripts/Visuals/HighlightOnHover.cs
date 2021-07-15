@@ -13,7 +13,7 @@ namespace Visuals
 
         private Color _defaultColor;
         
-        private Renderer _renderer;
+        private Material _material;
 
         private Text _text;
         private Slider _slider;
@@ -27,12 +27,15 @@ namespace Visuals
         }
 
         private HoverStatus _status = HoverStatus.None;
+        private static readonly int EmissionColor = Shader.PropertyToID("_EmissionColor");
 
         private void Start()
         {
-            _renderer = GetComponent<Renderer>();
-
-            _defaultColor = _renderer.material.color;
+            var renderer = GetComponent<Renderer>();
+            _material = renderer.material;
+            _material.EnableKeyword("_EMISSION");
+            
+            _defaultColor = _material.GetColor(EmissionColor);
             
             if (transform.parent.CompareTag("Character"))
             {
@@ -75,7 +78,7 @@ namespace Visuals
 
         private void Update()
         {
-            var color = _renderer.material.color;
+            var color = _material.GetColor(EmissionColor);
             var targetColor = _defaultColor;
             
             if (_status == HoverStatus.Hover)
@@ -87,7 +90,7 @@ namespace Visuals
                 targetColor = onClickColor;
             }
             
-            _renderer.material.color = Color.Lerp(color, targetColor, lerpFactor * Time.deltaTime);
+            _material.SetColor(EmissionColor, Color.Lerp(color, targetColor, lerpFactor * Time.deltaTime));
         }
     }
 }
