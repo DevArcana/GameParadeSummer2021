@@ -944,6 +944,7 @@ GameObject:
   - component: {fileID: 417342358699151540}
   - component: {fileID: 417342358699151541}
   - component: {fileID: 417342358699151531}
+  - component: {fileID: 8862690285354411089}
   m_Layer: 0
   m_Name: Game Arena
   m_TagString: Untagged
@@ -989,5 +990,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c680f3e411fd4118b75da1bd48dde70d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &8862690285354411089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 417342358699151542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c95e1cb4d5155f346b923bc8e193b94a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
