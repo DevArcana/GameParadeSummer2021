@@ -13,8 +13,9 @@ namespace Arena
             base.Start();
             _camera = Camera.main;
             _canMove = true;
-            health = 20;
+            health = maxHealth = 20;
             damage = 4;
+            healthBar.SetHealth(health, maxHealth);
         }
 
         private void Update()

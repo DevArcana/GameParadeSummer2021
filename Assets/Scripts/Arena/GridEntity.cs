@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Interface;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -12,9 +13,12 @@ namespace Arena
     {
         public AudioClip[] moveSounds;
         private AudioSource _audio;
+        
+        public HealthBarUI healthBar;
 
-        public double health;
-        public double damage;
+        public float health;
+        public float maxHealth;
+        public float damage;
         
         public float smoothTime = 1.0f;
         private Vector3 _velocity;
@@ -38,6 +42,7 @@ namespace Arena
             if (entity.GetType() != this.GetType())
             {
                 entity.health -= this.damage;
+                entity.healthBar.SetHealth(entity.health, entity.maxHealth);
                 yield return new WaitForEndOfFrame();
             }
             else
@@ -51,6 +56,5 @@ namespace Arena
 
             finish?.Invoke();
         }
-        
     }
 }

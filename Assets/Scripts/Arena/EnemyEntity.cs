@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Interface;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -11,8 +12,9 @@ namespace Arena
         {
             base.Start();
             TurnManager.Instance.TurnChanged += OnTurnChanged;
-            health = 8;
+            health = maxHealth = 8;
             damage = 2;
+            healthBar.SetHealth(health, maxHealth);
         }
 
         public void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)
@@ -44,6 +46,11 @@ namespace Arena
                     MakeAction();
                 }
             }));
+        }
+        
+        private void OnMouseOver()
+        {
+            Debug.Log("siema");
         }
     }
 }
