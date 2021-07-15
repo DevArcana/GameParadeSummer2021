@@ -23,21 +23,22 @@ namespace Arena
             Grid = new Grid<GridEntity>(7, 7, 1.0f, transform.position - new Vector3(3.5f, 0.0f, 3.5f));
         }
 
-        public bool Move(GridEntity entity, Vector3 pos, out Vector3 targetCellPos)
+        public bool CanMove(GridEntity entity, Vector3 position)
+        {
+            Grid.WorldToGrid(position, out var x, out var y);
+            return Grid.IsWithinGrid(x, y);
+        }
+
+        public bool Move(GridEntity entity, Vector3 position, out Vector3 targetCellPos)
         {
             targetCellPos = Vector3.zero;
             
-            Grid.WorldToGrid(pos, out var x, out var y);
-
-            if (!Grid.IsWithinGrid(x, y) )
+            if (!CanMove(entity, position))
             {
                 return false;
             }
 
-            if (!TurnManager.Instance.SpendPoint())
-            {
-                return false;
-            }
+            Grid.WorldToGrid(position, out var x, out var y);
 
             if (!(Grid[x, y] is null))
             {

@@ -71,13 +71,21 @@ namespace Arena
             Entities.Enqueue(last);
             OnTurnChanged(last, Entities.Peek());
         }
-        
-        public bool SpendPoint(int points = 1)
+
+        public bool CanSpendActionPoints(int amount = 1)
         {
-            if (ActionPoints - points < 0) return false;
+            return ActionPoints >= amount;
+        }
+        
+        public bool SpendActionPoints(int amount = 1)
+        {
+            if (!CanSpendActionPoints(amount))
+            {
+                return false;
+            }
             
-            ActionPoints -= points;
-            OnActionPointsChanged(points);
+            ActionPoints -= amount;
+            OnActionPointsChanged(amount);
 
             return true;
         }

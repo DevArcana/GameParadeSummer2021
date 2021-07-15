@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Arena
 {
@@ -12,11 +11,11 @@ namespace Arena
         protected override void Start()
         {
             base.Start();
+            ActionManager.Instance.ActionProcessed += OnActionProcessed;
             _camera = Camera.main;
             _canMove = true;
-            health = maxHealth = 20;
+            health = 20;
             damage = 4;
-            healthBar.SetHealth(health, maxHealth);
         }
 
         private void Update()
@@ -30,30 +29,33 @@ namespace Arena
             {
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
-                    GameArena.Instance.Grid.WorldToGrid(this.transform.position, out var x, out var y);
-                    var moves = GameArena.Instance.Grid.GetAvailableNeighbours(x, y).ToList();
-                    GameArena.Instance.Grid.WorldToGrid(hit.point, out x, out y);
-                    var move = new Vector2Int(x, y);
-                    if (moves.Contains(move))
-                    {
-                        if (GameArena.Instance.Move(this, hit.point, out var cellPos))
-                        {
-                            _canMove = false;
-                        
-                            StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
-                            {
-                                _canMove = true;
-
-                                if (TurnManager.Instance.ActionPoints == 0)
-                                {
-                                    TurnManager.Instance.FinishTurn();
-                                }
-                            }));
-                        }
-                    }
-                   
+                    _canMove = false;
+                    ActionManager.Instance.TryMove(this, hit.point);
+                    
+                    // if (GameArena.Instance.Move(this, hit.point, out var cellPos))
+                    // {
+                    //     _canMove = false;
+                    //     
+                    //     StartCoroutine(Move(new Vector3(cellPos.x + 0.5f, transform.position.y, cellPos.z + 0.5f), () =>
+                    //     {
+                    //         _canMove = true;
+                    //
+                    //         if (TurnManager.Instance.ActionPoints == 0)
+                    //         {
+                    //             TurnManager.Instance.FinishTurn();
+                    //         }
+                    //     }));
+                    // }
                 }
             }
         }
+
+        private void OnActionProcessed(object sender, ActionManager.OnActionProcessedEventArgs args)
+        {
+            if (args.Entity == this)
+            {
+                _canMove = true;
+            }
+        } 
     }
 }
