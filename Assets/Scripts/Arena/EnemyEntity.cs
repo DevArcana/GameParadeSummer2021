@@ -10,15 +10,15 @@ namespace Arena
         {
             base.Start();
             ActionManager.Instance.ActionProcessed += OnActionProcessed;
-            TurnManager.Instance.TurnChanged += OnTurnChanged;
+            TurnManager.Instance.TurnStarted += OnTurnStarted;
             health = maxHealth = 8;
             damage = 2;
             healthBar.SetHealth(health, maxHealth);
         }
 
-        public void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)
+        public void OnTurnStarted(object sender, TurnManager.OnTurnStartedEventArgs args)
         {
-            if (args.CurrentTurn == this)
+            if (args.Entity == this)
             {
                 MakeAction();
             }

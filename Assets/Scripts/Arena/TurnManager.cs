@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Arena
@@ -15,23 +17,38 @@ namespace Arena
 
         public GridEntity CurrentTurn => Entities.Any() ? Entities.Peek() : null;
 
-        #region OnTurnChanged
+        #region OnTurnStarted
 
-        public class OnTurnChangedEventArgs : EventArgs
+        public class OnTurnStartedEventArgs : EventArgs
         {
-            public GridEntity LastTurn;
-            public GridEntity CurrentTurn;
+            public GridEntity Entity;
         }
         
-        public event EventHandler<OnTurnChangedEventArgs> TurnChanged;
+        public event EventHandler<OnTurnStartedEventArgs> TurnStarted;
         
-        public void OnTurnChanged(GridEntity lastTurn, GridEntity currentTurn)
+        public void OnTurnStarted(GridEntity entity)
         {
-            TurnChanged?.Invoke(this, new OnTurnChangedEventArgs {LastTurn = lastTurn, CurrentTurn = currentTurn});
+            TurnStarted?.Invoke(this, new OnTurnStartedEventArgs {Entity = entity});
         }
 
         #endregion
 
+        #region OnTurnEnded
+
+        public class OnTurnEndedEventArgs : EventArgs
+        {
+            public GridEntity Entity;
+        }
+        
+        public event EventHandler<OnTurnEndedEventArgs> TurnEnded;
+        
+        public void OnTurnEnded(GridEntity entity)
+        {
+            TurnEnded?.Invoke(this, new OnTurnEndedEventArgs {Entity = entity});
+        }
+
+        #endregion
+        
         #region OnActionPointsChanged
 
         public class OnActionPointsChangedEventArgs : EventArgs
@@ -62,16 +79,7 @@ namespace Arena
         {
             return Entities.Peek() is PlayerEntity;
         }
-
-        private void NextTurn()
-        {
-            ActionPoints = 2;
-            OnActionPointsChanged(-2);
-            var last = Entities.Dequeue();
-            Entities.Enqueue(last);
-            OnTurnChanged(last, Entities.Peek());
-        }
-
+        
         public bool CanSpendActionPoints(int amount = 1)
         {
             return ActionPoints >= amount;
@@ -92,17 +100,31 @@ namespace Arena
 
         public void FinishTurn()
         {
-            NextTurn();
+            ActionPoints = 2;
+            OnActionPointsChanged(-2);
+            var last = Entities.Dequeue();
+            Entities.Enqueue(last);
+            OnTurnEnded(last);
+            StartCoroutine(Delay(1, () =>
+            {
+                OnTurnStarted(Entities.Peek());
+            }));
+        }
+
+        public IEnumerator Delay(int seconds, [CanBeNull] Action action)
+        {
+            yield return new WaitForSeconds(seconds);
+            action?.Invoke();
         }
 
         public void Enqueue(GridEntity entity)
         {
             Entities.Enqueue(entity);
 
-            if (Entities.Count == 1)
-            {
-                OnTurnChanged(null, entity);
-            }
+            // if (Entities.Count == 1)
+            // {
+            //     OnTurnChanged(null, entity);
+            // }
         }
     }
 }

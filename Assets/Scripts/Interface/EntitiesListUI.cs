@@ -14,7 +14,7 @@ namespace Interface
 
         private void Start()
         {
-            TurnManager.Instance.TurnChanged += OnTurnChanged;
+            TurnManager.Instance.TurnEnded += OnTurnEnded;
 
             foreach (var entity in TurnManager.Instance.Entities)
             {
@@ -28,13 +28,13 @@ namespace Interface
             }
         }
 
-        private void OnTurnChanged(object sender, TurnManager.OnTurnChangedEventArgs args)
+        private void OnTurnEnded(object sender, TurnManager.OnTurnEndedEventArgs args)
         {
             var anim = _queue.Dequeue();
             anim.SetTrigger(TriggerDestroy);
 
             var prefab = enemyIndicatorPrefab;
-            if (args.LastTurn is PlayerEntity)
+            if (args.Entity is PlayerEntity)
             {
                 prefab = playerIndicatorPrefab;
             }
