@@ -63,10 +63,5 @@ namespace Arena
                 MakeAction();
             }
         }
-        
-        private void OnMouseOver()
-        {
-            Debug.Log("siema");
-        }
     }
 }
