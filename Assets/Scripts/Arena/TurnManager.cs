@@ -104,6 +104,7 @@ namespace Arena
             OnActionPointsChanged(-2);
             var last = Entities.Dequeue();
             Entities.Enqueue(last);
+            
             OnTurnEnded(last);
             StartCoroutine(Delay(1, () =>
             {
@@ -121,10 +122,10 @@ namespace Arena
         {
             Entities.Enqueue(entity);
 
-            // if (Entities.Count == 1)
-            // {
-            //     OnTurnChanged(null, entity);
-            // }
+            if (Entities.Count == 1)
+            {
+                OnTurnStarted(entity);
+            }
         }
     }
 }
