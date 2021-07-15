@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Xml.Schema;
 using Grid;
 using UnityEngine;
 
@@ -25,8 +27,11 @@ namespace Arena
 
         public bool CanMove(GridEntity entity, Vector3 position)
         {
-            Grid.WorldToGrid(position, out var x, out var y);
-            return Grid.IsWithinGrid(x, y);
+            Grid.WorldToGrid(entity.transform.position, out var entityX, out var entityY);
+            Grid.WorldToGrid(position, out var destX, out var destY);
+            var moves = Grid.GetAvailableNeighbours(entityX, entityY).ToList();
+            
+            return Grid.IsWithinGrid(destX, destY) && moves.Contains(new Vector2Int(destX, destY));
         }
 
         public bool Move(GridEntity entity, Vector3 position, out Vector3 targetCellPos)
