@@ -38,12 +38,13 @@ namespace Arena
             var position = transform.position;
                 
             gameArena.Grid.WorldToGrid(position, out var x, out var y);
-            
+
             var moves = gameArena.Grid.GetAvailableNeighbours(x, y).ToList();
             var move = moves.ElementAt(Random.Range(0, moves.Count));
 
             position = gameArena.Grid.GridToWorld(move.x, move.y);
 
+            gameArena.Grid.WorldToGrid(position, out x, out y);
             var target = gameArena.Grid[x, y];
             var abilities = AbilityManager.Instance;
             

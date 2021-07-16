@@ -2,6 +2,7 @@
 using System.Collections;
 using Arena;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Ability.Abilities
 {
@@ -15,17 +16,15 @@ namespace Ability.Abilities
 
         public override bool CanExecute(Vector3 position, GridEntity target)
         {
-            return target != null;
+            return !(target is null) && AbilityUser.GetType() != target.GetType();
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity target, Action onFinish)
         {
-            var arena = GameArena.Instance;
-            var grid = arena.Grid;
+            target.TakeDamage(AbilityUser.damage);
             
-            grid.WorldToGrid(position, out var x, out var y);
-
-            return arena.Move(AbilityUser, x, y, onFinish);
+            onFinish.Invoke();
+            yield return null;
         }
     }
 }

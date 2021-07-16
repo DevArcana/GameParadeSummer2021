@@ -41,23 +41,26 @@ namespace Arena
             }
             
             GameArena.Instance.Grid.WorldToGrid(pos, out var x, out var y);
-            var entity = GameArena.Instance.Grid[x, y];
-            if (entity.GetType() != this.GetType())
+            while (transform.position != pos)
             {
-                entity.health -= this.damage;
-                entity.healthBar.SetHealth(entity.health, entity.maxHealth);
+                transform.position = Vector3.SmoothDamp(transform.position, pos, ref _velocity, smoothTime);
                 yield return new WaitForEndOfFrame();
-            }
-            else
-            {
-                while (transform.position != pos)
-                {
-                    transform.position = Vector3.SmoothDamp(transform.position, pos, ref _velocity, smoothTime);
-                    yield return new WaitForEndOfFrame();
-                }
             }
 
             finish?.Invoke();
+        }
+
+        public void TakeDamage(float damage)
+        {
+            health -= damage;
+
+            if (health <= 0)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            
+            healthBar.SetHealth(health, maxHealth);
         }
     }
 }
