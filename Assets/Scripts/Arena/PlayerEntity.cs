@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Ability;
+using UnityEngine;
 
 namespace Arena
 {
@@ -7,6 +8,8 @@ namespace Arena
         private Camera _camera;
 
         private bool _canMove = false;
+
+        private BaseAbility ability;
         
         protected override void Start()
         {
@@ -17,6 +20,8 @@ namespace Arena
             health = maxHealth = 20;
             damage = 4;
             healthBar.SetHealth(health, maxHealth);
+
+            ability = new MovementAbility(this);
         }
 
         private void Update()
@@ -31,7 +36,14 @@ namespace Arena
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
                     _canMove = false;
-                    ActionManager.Instance.TryMove(this, hit.point);
+                    AbilityManager.Instance.Use(ability, hit.point, () =>
+                    {
+                        _canMove = true;
+                    }, () =>
+                    {
+                        _canMove = true;
+                    });
+                    // ActionManager.Instance.TryMove(this, hit.point);
                 }
             }
         }

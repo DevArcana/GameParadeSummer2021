@@ -34,7 +34,7 @@ namespace Interface
             var item = _queue.Find(x => x.Item2 == args.Entity);
             _queue.Remove(item);
 
-            if (item.Item1 is null) return;
+            if (item.Item1 == null) return;
             item.Item1.SetTrigger(TriggerDestroy);
         }
 
