@@ -13,9 +13,9 @@ namespace Arena
         
         public int ActionPoints { get; private set; }
 
-        public Queue<GridEntity> Entities { get; set; } = new Queue<GridEntity>();
+        public List<GridEntity> Entities { get; set; } = new List<GridEntity>();
 
-        public GridEntity CurrentTurn => Entities.Any() ? Entities.Peek() : null;
+        public GridEntity CurrentTurn => Entities.Any() ? Entities[0] : null;
 
         #region OnTurnStarted
 
@@ -77,7 +77,7 @@ namespace Arena
 
         public bool IsPlayerTurn()
         {
-            return Entities.Peek() is PlayerEntity;
+            return Entities[0] is PlayerEntity;
         }
         
         public bool CanSpendActionPoints(int amount = 1)
@@ -102,13 +102,14 @@ namespace Arena
         {
             ActionPoints = 2;
             OnActionPointsChanged(-2);
-            var last = Entities.Dequeue();
-            Entities.Enqueue(last);
+            var last = Entities[0];
+            Entities.RemoveAt(0);
+            Entities.Add(last);
             
             OnTurnEnded(last);
             StartCoroutine(Delay(1, () =>
             {
-                OnTurnStarted(Entities.Peek());
+                OnTurnStarted(Entities[0]);
             }));
         }
 
@@ -120,7 +121,7 @@ namespace Arena
 
         public void Enqueue(GridEntity entity)
         {
-            Entities.Enqueue(entity);
+            Entities.Add(entity);
 
             if (Entities.Count == 1)
             {

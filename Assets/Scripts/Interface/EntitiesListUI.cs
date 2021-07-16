@@ -9,7 +9,7 @@ namespace Interface
         public Transform playerIndicatorPrefab;
         public Transform enemyIndicatorPrefab;
 
-        private readonly Queue<Animator> _queue = new Queue<Animator>();
+        private readonly List<Animator> _queue = new List<Animator>();
         private static readonly int TriggerDestroy = Animator.StringToHash("Destroy");
 
         private void Start()
@@ -24,13 +24,14 @@ namespace Interface
                     prefab = playerIndicatorPrefab;
                 }
             
-                _queue.Enqueue(Instantiate(prefab, transform).GetComponent<Animator>());
+                _queue.Add(Instantiate(prefab, transform).GetComponent<Animator>());
             }
         }
 
         private void OnTurnEnded(object sender, TurnManager.OnTurnEndedEventArgs args)
         {
-            var anim = _queue.Dequeue();
+            var anim = _queue[0];
+            _queue.RemoveAt(0);
             anim.SetTrigger(TriggerDestroy);
 
             var prefab = enemyIndicatorPrefab;
@@ -39,7 +40,7 @@ namespace Interface
                 prefab = playerIndicatorPrefab;
             }
             
-            _queue.Enqueue(Instantiate(prefab, transform).GetComponent<Animator>());
+            _queue.Add(Instantiate(prefab, transform).GetComponent<Animator>());
         }
     }
 }
