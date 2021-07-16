@@ -18,26 +18,30 @@ namespace Ability
 
         #endregion
 
-        public void Use(BaseAbility ability, Vector3 position, GridEntity target, Action onSuccess, Action onFail)
+        public bool CanUse(BaseAbility ability, Vector3 position, GridEntity target)
         {
-            var turnManager = TurnManager.Instance;
             var gameArena = GameArena.Instance;
             var grid = gameArena.Grid;
 
             grid.WorldToGrid(position, out var x, out var y);
             if (!ability.GetArea().Contains(new Vector2Int(x, y)))
             {
-                onFail();
-                return;
+                return false;
             }
             
             if (!ability.CanExecute(position, target))
             {
-                onFail();
-                return;
+                return false;
             }
 
-            if (!turnManager.TrySpendActionPoints(ability.Cost))
+            return true;
+        }
+        
+        public void Use(BaseAbility ability, Vector3 position, GridEntity target, Action onSuccess, Action onFail)
+        {
+            var turnManager = TurnManager.Instance;
+
+            if (!CanUse(ability, position, target))
             {
                 onFail();
                 return;

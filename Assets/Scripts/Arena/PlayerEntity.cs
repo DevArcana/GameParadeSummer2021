@@ -38,28 +38,21 @@ namespace Arena
             {
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
-                    if (_movement.CanExecute(hit.point, hit.transform.GetComponent<GridEntity>()))
+                    _canMove = false;
+                    var parent = hit.transform.parent;
+                    AbilityManager.Instance.Use(_movement, hit.point, parent != null ? parent.GetComponent<GridEntity>() : null, () =>
                     {
-                        _canMove = false;
-                        AbilityManager.Instance.Use(_movement, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
+                        _canMove = true;
+                    }, () =>
+                    {
+                        AbilityManager.Instance.Use(_melee, hit.point, parent != null ? parent.GetComponent<GridEntity>() : null, () =>
                         {
                             _canMove = true;
                         }, () =>
                         {
                             _canMove = true;
                         });
-                    }
-                    else if (_melee.CanExecute(hit.point, hit.transform.GetComponent<GridEntity>()))
-                    {
-                        _canMove = false;
-                        AbilityManager.Instance.Use(_melee, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
-                        {
-                            _canMove = true;
-                        }, () =>
-                        {
-                            _canMove = true;
-                        });
-                    }
+                    });
                 }
             }
         }
