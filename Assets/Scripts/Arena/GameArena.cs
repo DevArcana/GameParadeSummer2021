@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
-using System.Xml.Schema;
 using Grid;
 using JetBrains.Annotations;
 using UnityEngine;

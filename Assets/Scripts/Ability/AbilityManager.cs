@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Arena;
 using UnityEngine;
 
@@ -20,6 +19,11 @@ namespace Ability
 
         public bool CanUse(BaseAbility ability, Vector3 position, GridEntity target)
         {
+            if (TurnManager.Instance.CurrentTurn != ability.AbilityUser)
+            {
+                return false;
+            }
+            
             var gameArena = GameArena.Instance;
             var grid = gameArena.Grid;
 
@@ -47,13 +51,19 @@ namespace Ability
                 return;
             }
 
+            if (!turnManager.TrySpendActionPoints(ability.Cost))
+            {
+                onFail();
+                return;
+            }
+
             StartCoroutine(ability.Execute(position, target, () =>
             {
-                onSuccess();
                 if (turnManager.ActionPoints == 0)
                 {
                     turnManager.NextTurn();
                 }
+                onSuccess();
             }));
         }
     }

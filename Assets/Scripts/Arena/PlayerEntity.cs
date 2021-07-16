@@ -16,7 +16,7 @@ namespace Arena
         protected override void Start()
         {
             base.Start();
-            ActionManager.Instance.ActionProcessed += OnActionProcessed;
+            
             _camera = Camera.main;
             _canMove = true;
             health = maxHealth = 20;
@@ -54,14 +54,6 @@ namespace Arena
                         });
                     });
                 }
-            }
-        }
-
-        private void OnActionProcessed(object sender, ActionManager.OnActionProcessedEventArgs args)
-        {
-            if (args.Entity == this)
-            {
-                _canMove = true;
             }
         }
 

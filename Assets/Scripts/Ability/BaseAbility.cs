@@ -9,7 +9,7 @@ namespace Ability
 {
     public abstract class BaseAbility
     {
-        protected GridEntity AbilityUser { get; }
+        public GridEntity AbilityUser { get; }
         
         public abstract int Cost { get; }
 

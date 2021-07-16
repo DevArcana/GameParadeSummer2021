@@ -1,19 +1,26 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using System;
+using System.Linq;
+using Ability;
+using Ability.Abilities;
 using Random = UnityEngine.Random;
 
 namespace Arena
 {
     public class EnemyEntity : GridEntity
     {
+        private MovementAbility _movement;
+        private MeleeAbility _melee;
+        
         protected override void Start()
         {
             base.Start();
-            ActionManager.Instance.ActionProcessed += OnActionProcessed;
             TurnManager.Instance.TurnStarted += OnTurnStarted;
             health = maxHealth = 8;
             damage = 2;
             healthBar.SetHealth(health, maxHealth);
+
+            _movement = new MovementAbility(this);
+            _melee = new MeleeAbility(this);
         }
 
         public void OnTurnStarted(object sender, TurnManager.OnTurnChangeEventArgs args)
@@ -35,22 +42,29 @@ namespace Arena
             var moves = gameArena.Grid.GetAvailableNeighbours(x, y).ToList();
             var move = moves.ElementAt(Random.Range(0, moves.Count));
 
-            ActionManager.Instance.TryMove(this, gameArena.Grid.GridToWorld(move.x, move.y));
+            position = gameArena.Grid.GridToWorld(move.x, move.y);
+
+            var target = gameArena.Grid[x, y];
+            var abilities = AbilityManager.Instance;
+            
+            if (abilities.CanUse(_movement, position, target))
+            {
+                abilities.Use(_movement, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
+            }
+            else if (abilities.CanUse(_melee, position, target))
+            {
+                abilities.Use(_melee, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
+            }
         }
 
-        private void OnActionProcessed(object sender, ActionManager.OnActionProcessedEventArgs args)
+        private void OnActionSuccess()
         {
-            if (args.Entity != this)
-            {
-                return;
-            }
-            
-            if (!args.IsSuccess || args.IsSuccess && TurnManager.Instance.CurrentTurn == this)
+            if (TurnManager.Instance.ActionPoints > 0)
             {
                 MakeAction();
             }
         }
-        
+
         protected override void OnDestroy()
         {
             base.OnDestroy();
