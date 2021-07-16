@@ -10,7 +10,8 @@ namespace Arena
 
         private bool _canMove = false;
 
-        private BaseAbility ability;
+        private MovementAbility _movement;
+        private MeleeAbility _melee;
         
         protected override void Start()
         {
@@ -22,7 +23,8 @@ namespace Arena
             damage = 4;
             healthBar.SetHealth(health, maxHealth);
 
-            ability = new MovementAbility(this);
+            _movement = new MovementAbility(this);
+            _melee = new MeleeAbility(this);
         }
 
         private void Update()
@@ -36,15 +38,28 @@ namespace Arena
             {
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
-                    _canMove = false;
-                    AbilityManager.Instance.Use(ability, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
+                    if (_movement.CanExecute(hit.point, hit.transform.GetComponent<GridEntity>()))
                     {
-                        _canMove = true;
-                    }, () =>
+                        _canMove = false;
+                        AbilityManager.Instance.Use(_movement, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
+                        {
+                            _canMove = true;
+                        }, () =>
+                        {
+                            _canMove = true;
+                        });
+                    }
+                    else if (_melee.CanExecute(hit.point, hit.transform.GetComponent<GridEntity>()))
                     {
-                        _canMove = true;
-                    });
-                    // ActionManager.Instance.TryMove(this, hit.point);
+                        _canMove = false;
+                        AbilityManager.Instance.Use(_melee, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
+                        {
+                            _canMove = true;
+                        }, () =>
+                        {
+                            _canMove = true;
+                        });
+                    }
                 }
             }
         }
