@@ -48,15 +48,15 @@ namespace Arena
                 return;
             }
 
-            if (!turnManager.TrySpendActionPoint())
+            grid.WorldToGrid(entity.transform.position, out var entX, out var entY);
+            var moves = GameArena.Instance.Grid.GetAvailableNeighbours(entX, entY).ToList();
+            if (!moves.Contains(new Vector2Int(x, y)))
             {
                 OnActionProcessed(entity, false);
                 return;
             }
-            
-            grid.WorldToGrid(entity.transform.position, out var entX, out var entY);
-            var moves = GameArena.Instance.Grid.GetAvailableNeighbours(entX, entY).ToList();
-            if (!moves.Contains(new Vector2Int(x, y)))
+
+            if (!turnManager.TrySpendActionPoint())
             {
                 OnActionProcessed(entity, false);
                 return;
