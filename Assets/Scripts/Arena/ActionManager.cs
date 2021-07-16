@@ -1,75 +1,73 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Arena
 {
-    public enum EntityAction
-    {
-        Move,
-        Attack
-    }
-
     public class ActionManager : MonoBehaviour
     {
-        public static ActionManager Instance { get; private set; }
+        #region Singleton
 
-        public static Dictionary<EntityAction, int> PointsPerAction { get; private set; }
+        public static ActionManager Instance { get; private set; }
+        
+        private void Awake()
+        {
+            Instance = this;
+        }
+
+        #endregion
 
         #region OnActionProcessed
 
         public class OnActionProcessedEventArgs : EventArgs
         {
-            public GridEntity Entity;
-            public bool IsSuccess;
+            public GridEntity Entity { get; set; }
+            public bool IsSuccess { get; set; }
         }
 
         public event EventHandler<OnActionProcessedEventArgs> ActionProcessed;
 
-        public void OnActionProcessed(GridEntity entity, bool isSuccess)
+        private void OnActionProcessed(GridEntity entity, bool isSuccess)
         {
             ActionProcessed?.Invoke(this, new OnActionProcessedEventArgs {Entity = entity, IsSuccess = isSuccess});
         }
 
         #endregion
-        
-        private void Awake()
-        {
-            Instance = this;
-            PointsPerAction = new Dictionary<EntityAction, int>
-            {
-                {EntityAction.Move, 1},
-                {EntityAction.Attack, 1}
-            };
-        }
 
         public void TryMove(GridEntity entity, Vector3 position)
         {
             var turnManager = TurnManager.Instance;
             var gameArena = GameArena.Instance;
-            
-            if (!turnManager.CanSpendActionPoints(PointsPerAction[EntityAction.Move]))
-            {
-                OnActionProcessed(entity, false);
-                return;
-            }
-            
-            if (!gameArena.CanMove(entity, position))
+
+            var grid = gameArena.Grid;
+            grid.WorldToGrid(position, out var x, out var y);
+
+            if (!gameArena.CanMove(entity, x, y))
             {
                 OnActionProcessed(entity, false);
                 return;
             }
 
-            gameArena.Move(entity, position, out var cellPosition);
-            turnManager.SpendActionPoints(PointsPerAction[EntityAction.Move]);
+            if (!turnManager.TrySpendActionPoint())
+            {
+                OnActionProcessed(entity, false);
+                return;
+            }
             
-            StartCoroutine(entity.Move(new Vector3(cellPosition.x + 0.5f, transform.position.y, cellPosition.z + 0.5f), () =>
+            grid.WorldToGrid(entity.transform.position, out var entX, out var entY);
+            var moves = GameArena.Instance.Grid.GetAvailableNeighbours(entX, entY).ToList();
+            if (!moves.Contains(new Vector2Int(x, y)))
+            {
+                OnActionProcessed(entity, false);
+                return;
+            }
+
+            StartCoroutine(gameArena.Move(entity, x, y, () =>
             {
                 OnActionProcessed(entity, true);
                 if (turnManager.ActionPoints == 0)
                 {
-                    turnManager.FinishTurn();
+                    turnManager.NextTurn();
                 }
             }));
         }

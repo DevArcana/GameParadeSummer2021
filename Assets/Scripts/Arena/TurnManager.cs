@@ -9,107 +9,100 @@ namespace Arena
 {
     public class TurnManager : MonoBehaviour
     {
+        #region Singleton
+
         public static TurnManager Instance { get; private set; }
-        
-        public int ActionPoints { get; private set; }
-
-        public List<GridEntity> Entities { get; set; } = new List<GridEntity>();
-
-        public GridEntity CurrentTurn => Entities.Any() ? Entities[0] : null;
-
-        #region OnTurnStarted
-
-        public class OnTurnStartedEventArgs : EventArgs
-        {
-            public GridEntity Entity;
-        }
-        
-        public event EventHandler<OnTurnStartedEventArgs> TurnStarted;
-        
-        public void OnTurnStarted(GridEntity entity)
-        {
-            TurnStarted?.Invoke(this, new OnTurnStartedEventArgs {Entity = entity});
-        }
-
-        #endregion
-
-        #region OnTurnEnded
-
-        public class OnTurnEndedEventArgs : EventArgs
-        {
-            public GridEntity Entity;
-        }
-        
-        public event EventHandler<OnTurnEndedEventArgs> TurnEnded;
-        
-        public void OnTurnEnded(GridEntity entity)
-        {
-            TurnEnded?.Invoke(this, new OnTurnEndedEventArgs {Entity = entity});
-        }
-
-        #endregion
-        
-        #region OnActionPointsChanged
-
-        public class OnActionPointsChangedEventArgs : EventArgs
-        {
-            public int ActionPointsSpent;
-        }
-
-        public event EventHandler<OnActionPointsChangedEventArgs> ActionPointsChanged;
-        
-        public void OnActionPointsChanged(int points)
-        {
-            ActionPointsChanged?.Invoke(this, new OnActionPointsChangedEventArgs {ActionPointsSpent = points});
-        }
-
-        #endregion
 
         private void Awake()
         {
             Instance = this;
-        }
-
-        private void Start()
-        {
             ActionPoints = 2;
         }
 
-        public bool IsPlayerTurn()
+        #endregion
+
+        public int ActionPoints { get; private set; }
+
+        public List<GridEntity> EnqueuedEntities { get; } = new List<GridEntity>();
+        public GridEntity CurrentTurn => EnqueuedEntities.Any() ? EnqueuedEntities[0] : null;
+
+        #region OnTurnChange
+
+        public class OnTurnChangeEventArgs : EventArgs
         {
-            return Entities[0] is PlayerEntity;
+            public GridEntity Entity { get; set; }
         }
-        
-        public bool CanSpendActionPoints(int amount = 1)
+
+        public event EventHandler<OnTurnChangeEventArgs> TurnStarted;
+        public event EventHandler<OnTurnChangeEventArgs> TurnEnded;
+
+        private void OnTurnStarted(GridEntity entity)
         {
-            return ActionPoints >= amount;
+            TurnStarted?.Invoke(this, new OnTurnChangeEventArgs {Entity = entity});
         }
-        
-        public bool SpendActionPoints(int amount = 1)
+
+        private void OnTurnEnded(GridEntity entity)
         {
-            if (!CanSpendActionPoints(amount))
+            TurnEnded?.Invoke(this, new OnTurnChangeEventArgs {Entity = entity});
+        }
+
+        #endregion
+
+        #region OnActionPointsChanged
+
+        public event EventHandler ActionPointsChanged;
+
+        private void OnActionPointsChanged()
+        {
+            ActionPointsChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        #endregion
+
+        #region OnEntityDequeued
+
+        public class OnEntityDequeuedEventArgs : EventArgs
+        {
+            public GridEntity Entity { get; set; }
+        }
+
+        public event EventHandler<OnEntityDequeuedEventArgs> EntityDequeued;
+
+        private void OnEntityDequeued(GridEntity entity)
+        {
+            EntityDequeued?.Invoke(this, new OnEntityDequeuedEventArgs {Entity = entity});
+        }
+
+        #endregion
+
+        public bool TrySpendActionPoint() => TrySpendActionPoints(1);
+        
+        public bool TrySpendActionPoints(int amount)
+        {
+            if (ActionPoints < amount)
             {
                 return false;
             }
             
             ActionPoints -= amount;
-            OnActionPointsChanged(amount);
+            OnActionPointsChanged();
 
             return true;
         }
 
-        public void FinishTurn()
+        public void NextTurn()
         {
             ActionPoints = 2;
-            OnActionPointsChanged(-2);
-            var last = Entities[0];
-            Entities.RemoveAt(0);
-            Entities.Add(last);
+            OnActionPointsChanged();
+            
+            var last = CurrentTurn;
+            EnqueuedEntities.RemoveAt(0);
+            EnqueuedEntities.Add(last);
             
             OnTurnEnded(last);
             StartCoroutine(Delay(1, () =>
             {
-                OnTurnStarted(Entities[0]);
+                OnTurnStarted(CurrentTurn);
             }));
         }
 
@@ -121,12 +114,18 @@ namespace Arena
 
         public void Enqueue(GridEntity entity)
         {
-            Entities.Add(entity);
+            EnqueuedEntities.Add(entity);
 
-            if (Entities.Count == 1)
+            if (EnqueuedEntities.Count == 1)
             {
                 OnTurnStarted(entity);
             }
+        }
+
+        public void Dequeue(GridEntity entity)
+        {
+            EnqueuedEntities.Remove(entity);
+            OnEntityDequeued(entity);
         }
     }
 }

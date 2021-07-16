@@ -16,7 +16,7 @@ namespace Arena
             healthBar.SetHealth(health, maxHealth);
         }
 
-        public void OnTurnStarted(object sender, TurnManager.OnTurnStartedEventArgs args)
+        public void OnTurnStarted(object sender, TurnManager.OnTurnChangeEventArgs args)
         {
             if (args.Entity == this)
             {
@@ -49,6 +49,11 @@ namespace Arena
             {
                 MakeAction();
             }
+        }
+        
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
         }
     }
 }

@@ -42,6 +42,11 @@ namespace Arena
             {
                 _canMove = true;
             }
-        } 
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
     }
 }

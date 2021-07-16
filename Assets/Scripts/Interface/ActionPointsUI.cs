@@ -16,10 +16,10 @@ namespace Interface
             actionPoint2.isOn = false;
             
             TurnManager.Instance.ActionPointsChanged += OnActionPointsChanged;
-            OnActionPointsChanged(TurnManager.Instance, null);
+            OnActionPointsChanged(TurnManager.Instance, EventArgs.Empty);
         }
 
-        public void OnActionPointsChanged(object sender, TurnManager.OnActionPointsChangedEventArgs args)
+        public void OnActionPointsChanged(object sender, EventArgs args)
         {
             var manager = (TurnManager) sender;
 
