@@ -3,7 +3,7 @@ using System.Collections;
 using Arena;
 using UnityEngine;
 
-namespace Ability
+namespace Ability.Abilities
 {
     public class MovementAbility : BaseAbility
     {
@@ -13,7 +13,14 @@ namespace Ability
         {
         }
 
-        public override IEnumerator Execute(Vector3 position, Action onFinish)
+        public override bool CanExecute(Vector3 position, GridEntity target)
+        {
+            var arena = GameArena.Instance;
+            arena.Grid.WorldToGrid(position, out var x, out var y);
+            return arena.CanMove(AbilityUser, x, y);
+        }
+
+        public override IEnumerator Execute(Vector3 position, GridEntity target, Action onFinish)
         {
             var arena = GameArena.Instance;
             var grid = arena.Grid;

@@ -18,7 +18,7 @@ namespace Ability
 
         #endregion
 
-        public void Use(BaseAbility ability, Vector3 position, Action onSuccess, Action onFail)
+        public void Use(BaseAbility ability, Vector3 position, GridEntity target, Action onSuccess, Action onFail)
         {
             var turnManager = TurnManager.Instance;
             var gameArena = GameArena.Instance;
@@ -30,6 +30,12 @@ namespace Ability
                 onFail();
                 return;
             }
+            
+            if (!ability.CanExecute(position, target))
+            {
+                onFail();
+                return;
+            }
 
             if (!turnManager.TrySpendActionPoints(ability.Cost))
             {
@@ -37,7 +43,7 @@ namespace Ability
                 return;
             }
 
-            StartCoroutine(ability.Execute(position, () =>
+            StartCoroutine(ability.Execute(position, target, () =>
             {
                 onSuccess();
                 if (turnManager.ActionPoints == 0)

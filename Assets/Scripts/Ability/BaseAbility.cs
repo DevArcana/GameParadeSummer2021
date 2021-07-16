@@ -20,7 +20,12 @@ namespace Ability
             return grid.GetAvailableNeighbours(x, y).ToList();
         }
 
-        public abstract IEnumerator Execute(Vector3 position, Action onFinish);
+        public abstract IEnumerator Execute(Vector3 position, GridEntity target, Action onFinish);
+
+        public virtual bool CanExecute(Vector3 position, GridEntity target)
+        {
+            return true;
+        }
         
         protected BaseAbility(GridEntity user)
         {

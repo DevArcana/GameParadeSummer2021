@@ -1,4 +1,5 @@
 ﻿using Ability;
+using Ability.Abilities;
 using UnityEngine;
 
 namespace Arena
@@ -36,7 +37,7 @@ namespace Arena
                 if (Physics.Raycast(_camera.ScreenPointToRay(Input.mousePosition), out var hit))
                 {
                     _canMove = false;
-                    AbilityManager.Instance.Use(ability, hit.point, () =>
+                    AbilityManager.Instance.Use(ability, hit.point, hit.transform.GetComponent<GridEntity>(), () =>
                     {
                         _canMove = true;
                     }, () =>
