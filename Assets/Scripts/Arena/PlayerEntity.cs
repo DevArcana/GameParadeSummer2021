@@ -1,6 +1,7 @@
 ﻿using Ability;
 using Ability.Abilities;
 using UnityEngine;
+using Visuals;
 
 namespace Arena
 {
@@ -25,6 +26,9 @@ namespace Arena
 
             _movement = new MovementAbility(this);
             _melee = new MeleeAbility(this);
+            
+            TurnManager.Instance.TurnStarted += OnTurnStart;
+            AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
         }
 
         private void Update()
@@ -42,6 +46,10 @@ namespace Arena
                     var parent = hit.transform.parent;
                     AbilityManager.Instance.Use(_movement, hit.point, parent != null ? parent.GetComponent<GridEntity>() : null, () =>
                     {
+                        if (TurnManager.Instance.CurrentTurn == this)
+                        {
+                            AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
+                        }
                         _canMove = true;
                     }, () =>
                     {
@@ -57,8 +65,17 @@ namespace Arena
             }
         }
 
+        private void OnTurnStart(object sender, TurnManager.OnTurnChangeEventArgs args)
+        {
+            if (args.Entity == this)
+            {
+                AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
+            }
+        }
+
         protected override void OnDestroy()
         {
+            TurnManager.Instance.TurnStarted -= OnTurnStart;
             base.OnDestroy();
         }
     }

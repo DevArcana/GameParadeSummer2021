@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using Visuals;
 
 namespace Arena
 {
@@ -92,6 +93,7 @@ namespace Arena
 
         public void NextTurn()
         {
+            AbilityAreaDisplay.Instance.ClearDisplay();
             ActionPoints = 2;
             OnActionPointsChanged();
             
@@ -100,13 +102,13 @@ namespace Arena
             EnqueuedEntities.Add(last);
             
             OnTurnEnded(last);
-            StartCoroutine(Delay(1, () =>
+            StartCoroutine(Delay(0.25f, () =>
             {
                 OnTurnStarted(CurrentTurn);
             }));
         }
 
-        public IEnumerator Delay(int seconds, [CanBeNull] Action action)
+        public IEnumerator Delay(float seconds, [CanBeNull] Action action)
         {
             yield return new WaitForSeconds(seconds);
             action?.Invoke();
