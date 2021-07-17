@@ -1,4 +1,6 @@
 ﻿using System;
+using Ability.Abilities;
+using Arena;
 
 namespace Ability
 {
@@ -24,6 +26,13 @@ namespace Ability
         public bool HasAbility(int slot)
         {
             return _slots[slot] != null;
+        }
+
+        public void PopulateAbilities(GridEntity entity)
+        {
+            SetAbility(0, AbilityFactory.GetRandomAbility(entity));
+            SetAbility(1, AbilityFactory.GetRandomAbility(entity));
+            SetAbility(2, AbilityFactory.GetRandomAbility(entity));
         }
 
         public void SetAbility(int slot, BaseAbility ability)

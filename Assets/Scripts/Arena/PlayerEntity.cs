@@ -96,6 +96,7 @@ namespace Arena
             if (args.Entity == this)
             {
                 abilitySlots.Deselect();
+                abilitySlots.PopulateAbilities(this);
             }
         }
 

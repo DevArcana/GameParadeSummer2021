@@ -37,9 +37,7 @@ namespace Arena
             moveAbility = new BasicMoveAbility(this);
             attackAbility = new BasicAttackAbility(this);
             
-            abilitySlots.SetAbility(0, new StraightDashAbility(this));
-            abilitySlots.SetAbility(1, new FireballAbility(this));
-            abilitySlots.SetAbility(2, new KamikazeAbility(this));
+            abilitySlots.PopulateAbilities(this);
         }
 
         protected virtual void OnDestroy()
