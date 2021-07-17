@@ -255,7 +255,7 @@ MonoBehaviour:
   health: 0
   maxHealth: 0
   armour: 0
-  smoothTime: 0.1
+  smoothTime: 0.05
 --- !u!82 &1750801454651125519
 AudioSource:
   m_ObjectHideFlags: 0
