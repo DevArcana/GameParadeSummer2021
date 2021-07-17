@@ -21,6 +21,7 @@ namespace Ability.Abilities
         };
 
         public float StrengthPercentage = 1.0f;
+        private static readonly int Attack = Animator.StringToHash("Attack");
         public float Damage => StrengthPercentage * AbilityUser.strength;
 
         public BasicAttackAbility(GridEntity user) : base(user)
@@ -41,8 +42,8 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
+            AbilityUser.animator.SetTrigger(Attack);
             targetEntity.TakeDamage(Damage);
-            
             onFinish.Invoke();
             yield return null;
         }

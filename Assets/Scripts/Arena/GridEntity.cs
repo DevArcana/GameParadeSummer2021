@@ -13,6 +13,7 @@ namespace Arena
     [RequireComponent(typeof(AudioSource))]
     public class GridEntity : MonoBehaviour
     {
+        public Animator animator;
         public AudioClip[] moveSounds;
         private AudioSource _audio;
         

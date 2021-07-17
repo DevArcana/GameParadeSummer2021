@@ -150,6 +150,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 120093821869210877}
+  - component: {fileID: 2453301794103479882}
   m_Layer: 0
   m_Name: Armature
   m_TagString: Untagged
@@ -174,6 +175,25 @@ Transform:
   m_Father: {fileID: 1750801454651125518}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2453301794103479882
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522030189090194603}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 02327df32cf4df94795f7eb068b0906d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1750801454651125516
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823029ce8dec4caa8daae375ce4abac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 2453301794103479882}
   moveSounds:
   - {fileID: 8300000, guid: 1d5316e54f716614da5faba6d2359921, type: 3}
   - {fileID: 8300000, guid: c1c5cc8af3d41384faf5421a5c0be190, type: 3}
