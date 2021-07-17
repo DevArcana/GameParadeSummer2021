@@ -17,7 +17,7 @@ namespace Arena
         private void Awake()
         {
             Instance = this;
-            ActionPoints = 2;
+            ActionPoints = 3;
         }
 
         #endregion
@@ -101,7 +101,7 @@ namespace Arena
         public void NextTurn()
         {
             AbilityAreaDisplay.Instance.ClearDisplay();
-            ActionPoints = 2;
+            ActionPoints = 3;
             OnActionPointsChanged();
             
             var last = CurrentTurn;
@@ -141,8 +141,15 @@ namespace Arena
 
         public void Dequeue(GridEntity entity)
         {
+            var nextTurn = entity == CurrentTurn;
+            
             EnqueuedEntities.Remove(entity);
             OnEntityDequeued(entity);
+
+            if (nextTurn)
+            {
+                NextTurn();
+            }
 
             if (EnqueuedEntities.All(x => x is PlayerEntity))
             {
