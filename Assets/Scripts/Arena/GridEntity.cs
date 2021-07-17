@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using Ability;
+using Ability.Abilities;
 using Interface;
 using JetBrains.Annotations;
 using UnityEngine;
+using Visuals;
 
 namespace Arena
 {
@@ -21,11 +24,22 @@ namespace Arena
         
         public float smoothTime = 1.0f;
         private Vector3 _velocity;
-        
+
+        protected BasicMoveAbility moveAbility;
+        protected BasicAttackAbility attackAbility;
+        public readonly AbilitySlots abilitySlots = new AbilitySlots();
+
         protected virtual void Start()
         {
             _audio = GetComponent<AudioSource>();
             GameArena.Instance.Register(this);
+
+            moveAbility = new BasicMoveAbility(this);
+            attackAbility = new BasicAttackAbility(this);
+            
+            abilitySlots.SetAbility(0, new StraightDashAbility(this));
+            abilitySlots.SetAbility(1, new FireballAbility(this));
+            abilitySlots.SetAbility(2, new KamikazeAbility(this));
         }
 
         protected virtual void OnDestroy()

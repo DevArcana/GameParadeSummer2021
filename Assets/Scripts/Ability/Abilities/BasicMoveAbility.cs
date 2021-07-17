@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class MovementAbility : BaseAbility
+    public class BasicMoveAbility : BaseAbility
     {
         public override int Cost => 1;
 
@@ -19,7 +19,7 @@ namespace Ability.Abilities
             AbilityTag.AreaTargeted
         };
 
-        public MovementAbility(GridEntity user) : base(user)
+        public BasicMoveAbility(GridEntity user) : base(user)
         {
         }
 

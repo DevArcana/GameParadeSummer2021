@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class MeleeAbility : BaseAbility
+    public class BasicAttackAbility : BaseAbility
     {
         public override int Cost => 1;
 
@@ -20,7 +20,7 @@ namespace Ability.Abilities
             AbilityTag.EnemyTargeted
         };
 
-        public MeleeAbility(GridEntity user) : base(user)
+        public BasicAttackAbility(GridEntity user) : base(user)
         {
         }
 

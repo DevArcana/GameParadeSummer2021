@@ -9,7 +9,7 @@ namespace Ability.Abilities
 {
     public class StraightDashAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 1;
 
         public override string Name => "Straight Dash";
         public override string Tooltip => $"Dash {DashDistance} units in a cardinal direction. Dash through any enemies";

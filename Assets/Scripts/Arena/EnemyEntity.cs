@@ -9,8 +9,8 @@ namespace Arena
 {
     public class EnemyEntity : GridEntity
     {
-        private MovementAbility _movement;
-        private MeleeAbility _melee;
+        private BasicMoveAbility _basicMove;
+        private BasicAttackAbility _basicAttack;
         
         protected override void Start()
         {
@@ -20,8 +20,8 @@ namespace Arena
             damage = 2;
             healthBar.SetHealth(health, maxHealth);
 
-            _movement = new MovementAbility(this);
-            _melee = new MeleeAbility(this);
+            _basicMove = new BasicMoveAbility(this);
+            _basicAttack = new BasicAttackAbility(this);
         }
 
         public void OnTurnStarted(object sender, TurnManager.OnTurnChangeEventArgs args)
@@ -49,13 +49,13 @@ namespace Arena
             var target = gameArena.Grid[x, y];
             var abilities = AbilityManager.Instance;
             
-            if (abilities.CanUse(_movement, position, target))
+            if (abilities.CanUse(_basicMove, position, target))
             {
-                abilities.Use(_movement, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
+                abilities.Use(_basicMove, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
             }
-            else if (abilities.CanUse(_melee, position, target))
+            else if (abilities.CanUse(_basicAttack, position, target))
             {
-                abilities.Use(_melee, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
+                abilities.Use(_basicAttack, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
             }
         }
 

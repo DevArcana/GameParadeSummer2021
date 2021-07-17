@@ -11,9 +11,6 @@ namespace Arena
 
         private bool _canMove = false;
 
-        private MovementAbility _movement;
-        private MeleeAbility _melee;
-        
         protected override void Start()
         {
             base.Start();
@@ -24,11 +21,15 @@ namespace Arena
             damage = 4;
             healthBar.SetHealth(health, maxHealth);
 
-            _movement = new MovementAbility(this);
-            _melee = new MeleeAbility(this);
-            
             TurnManager.Instance.TurnStarted += OnTurnStart;
-            AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
+            abilitySlots.AbilitySelectionChanged += OnAbilitySelectionChanged;
+            abilitySlots.Deselect();
+        }
+        
+        private void OnAbilitySelectionChanged(object sender, AbilitySlots.AbilitySelectionChangedEventArgs args)
+        {
+            var slot = args.Slot;
+            AbilityAreaDisplay.Instance.DisplayAreaFor(slot == -1 ? moveAbility : abilitySlots.SelectedAbility);
         }
 
         private void Update()
@@ -44,38 +45,64 @@ namespace Arena
                 {
                     _canMove = false;
                     var parent = hit.transform.parent;
-                    AbilityManager.Instance.Use(_movement, hit.point, parent != null ? parent.GetComponent<GridEntity>() : null, () =>
+                    var target = parent != null ? parent.GetComponent<GridEntity>() : null;
+
+                    var selectedAbility = abilitySlots.SelectedAbility;
+
+                    if (selectedAbility != null)
                     {
-                        if (TurnManager.Instance.CurrentTurn == this)
-                        {
-                            AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
-                        }
-                        _canMove = true;
-                    }, () =>
-                    {
-                        AbilityManager.Instance.Use(_melee, hit.point, parent != null ? parent.GetComponent<GridEntity>() : null, () =>
+                        AbilityManager.Instance.Use(selectedAbility, hit.point, target, () =>
                         {
                             _canMove = true;
-                        }, () =>
+                            abilitySlots.SetAbility(abilitySlots.SelectedSlot, null);
+                        },
+                        () =>
                         {
                             _canMove = true;
+                            abilitySlots.Deselect();
                         });
-                    });
+                    }
+                    else
+                    {
+                        TryMoveOrAttack(hit.point, target);
+                    }
                 }
             }
+        }
+
+        private void TryMoveOrAttack(Vector3 position, GridEntity target)
+        {
+            AbilityManager.Instance.Use(moveAbility, position, target, () =>
+            {
+                if (TurnManager.Instance.CurrentTurn == this)
+                {
+                    AbilityAreaDisplay.Instance.DisplayAreaFor(moveAbility);
+                }
+                _canMove = true;
+            }, () =>
+            {
+                AbilityManager.Instance.Use(attackAbility, position, target, () =>
+                {
+                    _canMove = true;
+                }, () =>
+                {
+                    _canMove = true;
+                });
+            });
         }
 
         private void OnTurnStart(object sender, TurnManager.OnTurnChangeEventArgs args)
         {
             if (args.Entity == this)
             {
-                AbilityAreaDisplay.Instance.DisplayAreaFor(_movement);
+                abilitySlots.Deselect();
             }
         }
 
         protected override void OnDestroy()
         {
             TurnManager.Instance.TurnStarted -= OnTurnStart;
+            abilitySlots.AbilitySelectionChanged -= OnAbilitySelectionChanged;
             base.OnDestroy();
         }
     }
