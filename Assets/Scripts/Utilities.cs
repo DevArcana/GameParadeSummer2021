@@ -11,36 +11,27 @@ public static class Utilities
     
     private static readonly string[] FirstNames =
     {
-        "John",
-        "Bob",
-        "Alice",
-        "Alex",
-        "Norman",
-        "Leo",
-        "Kiri",
-        "Klu",
-        "Mex",
-        "Mi",
-        "Xiu",
-        "Xi",
-        "He",
-        "Witek",
+        "Witold",
         "Piotr",
         "Damian",
-        "Arek"
+        "Arek",
+        "Gerwazy",
+        "Elon",
+        "Captain",
+        "Tony"
     };
         
     private static readonly string[] LastNames =
     {
-        "Sha",
-        "Lu",
-        "Wei",
-        "Wei Wei",
-        "Flu",
+        "Musk",
+        "Bu",
+        "Ba",
+        "Be",
+        "Bezos",
+        "Mt. Sugar",
         "Smith",
-        "Herb",
-        "Boxing",
-        "Martyr"
+        "America",
+        "Stark"
     };
     
     public static string RandomizeName()
