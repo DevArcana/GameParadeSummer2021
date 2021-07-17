@@ -109,6 +109,12 @@ namespace Arena
             EnqueuedEntities.Add(last);
             
             OnTurnEnded(last);
+            var delay = 0.25f;
+
+            if (last is EnemyEntity)
+            {
+                delay = 0;
+            }
             StartCoroutine(Delay(0.25f, () =>
             {
                 OnTurnStarted(CurrentTurn);
