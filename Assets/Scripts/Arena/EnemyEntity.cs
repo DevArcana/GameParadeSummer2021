@@ -59,6 +59,10 @@ namespace Arena
             {
                 abilities.Use(_basicAttack, position, target, OnActionSuccess, () => throw new InvalidOperationException("should never happen"));
             }
+            else if (TurnManager.Instance.CurrentTurn == this && TurnManager.Instance.ActionPoints > 0)
+            {
+                MakeAction();
+            }
         }
 
         private void OnActionSuccess()

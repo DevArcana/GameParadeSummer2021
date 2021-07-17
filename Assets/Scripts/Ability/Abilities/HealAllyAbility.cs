@@ -27,7 +27,7 @@ namespace Ability.Abilities
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return !(targetEntity is null) && targetEntity.GetType() == AbilityUser.GetType() && targetEntity.health < targetEntity.maxHealth;
+            return !(targetEntity is null) && targetEntity != AbilityUser && targetEntity.GetType() == AbilityUser.GetType() && targetEntity.health < targetEntity.maxHealth;
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
