@@ -6,7 +6,7 @@ using Ability.Abilities;
 using Interface;
 using JetBrains.Annotations;
 using UnityEngine;
-using Visuals;
+using Random = UnityEngine.Random;
 
 namespace Arena
 {
@@ -16,6 +16,8 @@ namespace Arena
         public Animator animator;
         public AudioClip[] moveSounds;
         private AudioSource _audio;
+
+        public string EntityName { get; set; } = Utilities.RandomizeName();
         
         public HealthBarUI healthBar;
 
