@@ -11,6 +11,8 @@ namespace Arena
     {
         #region Singleton
 
+        private bool _destroyed = false;
+        
         public static GameArena Instance { get; private set; }
 
         private void Awake()
@@ -39,7 +41,7 @@ namespace Arena
 
         private void OnWaveChange(object sender, EventArgs args)
         {
-            if (this != null)
+            if (!_destroyed)
             {
                 var waveManager = (WaveManager) sender;
                 var count = waveManager.CurrentWave;
@@ -79,6 +81,11 @@ namespace Arena
             Grid[x, y] = null;
 
             yield return entity.Move(new Vector3(pos.x + 0.5f, pos.y, pos.z + 0.5f), onFinish);
+        }
+
+        private void OnDestroy()
+        {
+            _destroyed = true;
         }
 
         public void Register(GridEntity entity)
