@@ -3,6 +3,7 @@ using System.Collections;
 using Grid;
 using JetBrains.Annotations;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Arena
 {
@@ -20,12 +21,48 @@ namespace Arena
 
         #endregion
 
+        public Transform enemyPrefab;
+
+        private void Start()
+        {
+            WaveManager.Instance.WaveChanged += OnWaveChange;
+            SpawnEnemies(1);
+        }
+
         public Grid<GridEntity> Grid { get; private set; }
 
         public bool CanMove(GridEntity entity, int destX, int destY)
         {
             Grid.WorldToGrid(entity.transform.position, out var entityX, out var entityY);
             return Grid.IsWithinGrid(destX, destY) && Grid[destX, destY] is null && (destX != entityX || destY != entityY);
+        }
+
+        private void OnWaveChange(object sender, EventArgs args)
+        {
+            if (this != null)
+            {
+                var waveManager = (WaveManager) sender;
+                var count = waveManager.CurrentWave;
+                SpawnEnemies(count);
+            }
+        }
+
+        private void SpawnEnemies(int count)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                var x = Random.Range(0, 7);
+                var y = Random.Range(0, 7);
+
+                while (!(Grid[x, y] is null))
+                {
+                    x = Random.Range(0, 7);
+                    y = Random.Range(0, 7);
+                }
+                
+                var position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
+                Instantiate(enemyPrefab, position, Quaternion.identity);
+            }
         }
 
         public IEnumerator Move(GridEntity entity, int x, int y, [CanBeNull] Action onFinish = null)

@@ -16,6 +16,7 @@ namespace Interface
         {
             TurnManager.Instance.TurnEnded += OnTurnEnded;
             TurnManager.Instance.EntityDequeued += OnEntityDequeued;
+            TurnManager.Instance.EntityEnqueued += OnEntityEnqueued;
 
             foreach (var entity in TurnManager.Instance.EnqueuedEntities)
             {
@@ -28,8 +29,19 @@ namespace Interface
                 _queue.Add((Instantiate(prefab, transform).GetComponent<Animator>(), entity));
             }
         }
+        
+        private void OnEntityEnqueued(object sender, TurnManager.EntityEventArgs args)
+        {
+            var entity = args.Entity;
+            var prefab = enemyIndicatorPrefab;
+            if (entity is PlayerEntity)
+            {
+                prefab = playerIndicatorPrefab;
+            }
+            _queue.Add((Instantiate(prefab, transform).GetComponent<Animator>(), entity));
+        }
 
-        private void OnEntityDequeued(object sender, TurnManager.OnEntityDequeuedEventArgs args)
+        private void OnEntityDequeued(object sender, TurnManager.EntityEventArgs args)
         {
             var item = _queue.Find(x => x.Item2 == args.Entity);
             _queue.Remove(item);

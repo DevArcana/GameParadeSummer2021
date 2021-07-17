@@ -62,16 +62,23 @@ namespace Arena
 
         #region OnEntityDequeued
 
-        public class OnEntityDequeuedEventArgs : EventArgs
+        public class EntityEventArgs : EventArgs
         {
             public GridEntity Entity { get; set; }
         }
 
-        public event EventHandler<OnEntityDequeuedEventArgs> EntityDequeued;
+        public event EventHandler<EntityEventArgs> EntityDequeued;
 
         private void OnEntityDequeued(GridEntity entity)
         {
-            EntityDequeued?.Invoke(this, new OnEntityDequeuedEventArgs {Entity = entity});
+            EntityDequeued?.Invoke(this, new EntityEventArgs {Entity = entity});
+        }
+        
+        public event EventHandler<EntityEventArgs> EntityEnqueued;
+
+        private void OnEntityEnqueued(GridEntity entity)
+        {
+            EntityEnqueued?.Invoke(this, new EntityEventArgs {Entity = entity});
         }
 
         #endregion
@@ -122,12 +129,19 @@ namespace Arena
             {
                 OnTurnStarted(entity);
             }
+            
+            OnEntityEnqueued(entity);
         }
 
         public void Dequeue(GridEntity entity)
         {
             EnqueuedEntities.Remove(entity);
             OnEntityDequeued(entity);
+
+            if (EnqueuedEntities.All(x => x is PlayerEntity))
+            {
+                WaveManager.Instance.NextWave();
+            }
         }
     }
 }
