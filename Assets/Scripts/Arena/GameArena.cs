@@ -59,7 +59,7 @@ namespace Arena
                 var x = Random.Range(0, 7);
                 var y = Random.Range(0, 7);
 
-                while (newEnemies.Contains((x, y)))
+                while (!(Grid[x, y] is null) || newEnemies.Contains((x, y)))
                 {
                     x = Random.Range(0, 7);
                     y = Random.Range(0, 7);
