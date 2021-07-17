@@ -79,7 +79,22 @@ namespace Arena
 
         public void TakeDamage(float amount)
         {
-            health -= amount;
+            if (armour > 0)
+            {
+                if (amount > armour)
+                {
+                    health -= (amount - armour);
+                    armour = 0;
+                }
+                else
+                {
+                    armour -= amount;
+                }
+            }
+            else
+            {
+                health -= amount;
+            }
 
             if (health <= 0)
             {

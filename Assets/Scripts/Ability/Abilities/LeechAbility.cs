@@ -11,7 +11,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Leech";
-        public override string Tooltip => $"Deal {Damage} (4 - {DamageFocusPercentage.ToPercentage()} FOC) damage to a targeted allied unit and restore {Heal} (1 + {HealFocusPercentage.ToPercentage()} FOC) health to yourself.";
+        public override string Tooltip => $"Deal {Damage} (4 - {DamageFocusPercentage.ToPercentage()} FOC) damage to a targeted allied unit and restore {Heal} (2 + {HealFocusPercentage.ToPercentage()} FOC) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Healing,
