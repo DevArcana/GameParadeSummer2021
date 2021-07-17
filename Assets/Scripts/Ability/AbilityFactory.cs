@@ -9,7 +9,7 @@ namespace Ability.Abilities
     public static class AbilityFactory
     {
         private static readonly Random _random = new Random();
-        private static int count = 13;
+        private static int count = 14;
         
         public static BaseAbility GetRandomAbility(GridEntity entity)
         {
@@ -29,6 +29,7 @@ namespace Ability.Abilities
                 10 => new SalvationAbility(entity),
                 11 => new StraightDashAbility(entity),
                 12 => new SuctionAbility(entity),
+                13 => new CloneAbility(entity),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

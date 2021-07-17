@@ -33,7 +33,7 @@ namespace Arena
 
         #endregion
         
-        public float smoothTime = 0.3f;
+        public float smoothTime = 1.0f;
         private Vector3 _velocity;
 
         protected BasicMoveAbility moveAbility;
