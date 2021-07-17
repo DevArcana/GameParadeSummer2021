@@ -83,6 +83,12 @@ namespace Arena
             healthBar.SetHealth(health, maxHealth);
         }
 
+        public void Execute()
+        {
+            health = 0;
+            Destroy(gameObject);
+        }
+
         public void Heal(float amount)
         {
             health = Math.Min(health + amount, maxHealth);

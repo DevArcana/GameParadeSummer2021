@@ -19,6 +19,8 @@ namespace Arena
             _canMove = true;
             health = maxHealth = 20;
             strength = 4;
+            agility = 2;
+            focus = 2;
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;

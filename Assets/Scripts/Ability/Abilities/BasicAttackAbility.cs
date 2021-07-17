@@ -12,13 +12,16 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Attack";
-        public override string Tooltip => $"Deal {AbilityUser.strength} damage to an enemy next to the player in cardinal direction.";
+        public override string Tooltip => $"Deal {Damage} ({StrengthPercentage.ToPercentage()} STR) damage to an enemy next to you in any cardinal direction.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
             AbilityTag.Melee,
             AbilityTag.EnemyTargeted
         };
+
+        public float StrengthPercentage = 1.0f;
+        public float Damage => StrengthPercentage * AbilityUser.strength;
 
         public BasicAttackAbility(GridEntity user) : base(user)
         {
@@ -38,7 +41,7 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.TakeDamage(AbilityUser.strength);
+            targetEntity.TakeDamage(Damage);
             
             onFinish.Invoke();
             yield return null;

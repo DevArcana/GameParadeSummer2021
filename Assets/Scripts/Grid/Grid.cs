@@ -71,7 +71,7 @@ namespace Grid
         {
             var tiles = new List<Vector2Int>();
 
-            for (var i = 1; i < axisDistance; i++)
+            for (var i = 1; i <= axisDistance; i++)
             {
                 tiles.AddRange(GetCardinalAtEdge(x, y, i));
             }
@@ -99,7 +99,7 @@ namespace Grid
         {
             var tiles = new List<Vector2Int>();
 
-            for (var i = 1; i < diagonalDistance; i++)
+            for (var i = 1; i <= diagonalDistance; i++)
             {
                 tiles.AddRange(GetOrdinalAtEdge(x, y, i));
             }

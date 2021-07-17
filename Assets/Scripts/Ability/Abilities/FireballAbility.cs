@@ -11,7 +11,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Fireball";
-        public override string Tooltip => $"Deal {Damage} damage to a targeted enemy unit.";
+        public override string Tooltip => $"Deal {Damage} (1 + {StrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -19,7 +19,8 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public int Damage = 3;
+        public float StrengthPercentage = 0.5f;
+        public float Damage => 1 + StrengthPercentage * AbilityUser.strength;
         
         public FireballAbility(GridEntity user) : base(user)
         {
