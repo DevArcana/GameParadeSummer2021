@@ -44,7 +44,11 @@ namespace Arena
 
         protected virtual void OnDestroy()
         {
-            GameArena.Instance.Kill(this);
+            var arena = GameArena.Instance;
+            if (arena != null)
+            {
+                arena.Kill(this);
+            }
         }
         
         public IEnumerator Move(Vector3 pos, [CanBeNull] Action finish = null)
