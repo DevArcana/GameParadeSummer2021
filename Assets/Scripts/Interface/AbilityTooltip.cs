@@ -19,7 +19,7 @@ namespace Interface
 
             if (ability != null)
             {
-                Tooltip.Instance.Enable(ability.Tooltip);
+                Tooltip.Instance.Enable($"Cost: {ability.Cost} AP\n{ability.Tooltip}");
             }
         }
 
