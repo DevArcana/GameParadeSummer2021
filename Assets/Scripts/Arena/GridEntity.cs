@@ -18,9 +18,17 @@ namespace Arena
         
         public HealthBarUI healthBar;
 
+        #region Attributes
+        
+        public float strength;
+        public float focus;
+        public float agility;
+        
         public float health;
         public float maxHealth;
-        public float damage;
+        public float armour;
+
+        #endregion
         
         public float smoothTime = 1.0f;
         private Vector3 _velocity;

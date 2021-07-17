@@ -18,7 +18,7 @@ namespace Arena
             _camera = Camera.main;
             _canMove = true;
             health = maxHealth = 20;
-            damage = 4;
+            strength = 4;
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;

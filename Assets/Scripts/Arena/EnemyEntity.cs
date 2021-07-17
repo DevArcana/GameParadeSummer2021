@@ -17,7 +17,7 @@ namespace Arena
             base.Start();
             TurnManager.Instance.TurnStarted += OnTurnStarted;
             health = maxHealth = 8;
-            damage = 2;
+            strength = 2;
             healthBar.SetHealth(health, maxHealth);
 
             _basicMove = new BasicMoveAbility(this);

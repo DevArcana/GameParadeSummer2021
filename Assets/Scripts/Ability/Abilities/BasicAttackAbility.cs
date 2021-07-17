@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Attack";
-        public override string Tooltip => $"Deal {AbilityUser.damage} damage to an enemy next to the player in cardinal direction.";
+        public override string Tooltip => $"Deal {AbilityUser.strength} damage to an enemy next to the player in cardinal direction.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -38,7 +38,7 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.TakeDamage(AbilityUser.damage);
+            targetEntity.TakeDamage(AbilityUser.strength);
             
             onFinish.Invoke();
             yield return null;

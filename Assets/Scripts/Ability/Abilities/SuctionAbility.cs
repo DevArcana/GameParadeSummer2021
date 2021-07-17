@@ -34,7 +34,7 @@ namespace Ability.Abilities
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
             targetEntity.TakeDamage(Damage);
-            AbilityUser.damage += 1;
+            AbilityUser.strength += 1;
             
             onFinish.Invoke();
             yield return null;

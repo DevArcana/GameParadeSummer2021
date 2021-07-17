@@ -38,7 +38,7 @@ namespace Ability.Abilities
             
             foreach (var ally in TurnManager.Instance.EnqueuedEntities.Where(x => x != AbilityUser && x.GetType() == AbilityUser.GetType()))
             {
-                ally.damage += 1;
+                ally.strength += 1;
             }
             
             onFinish.Invoke();
