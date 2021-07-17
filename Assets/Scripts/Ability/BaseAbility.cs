@@ -7,22 +7,44 @@ using UnityEngine;
 
 namespace Ability
 {
+    public enum AbilityTag
+    {
+        SelfTargeted,
+        AllyTargeted,
+        EnemyTargeted,
+        AreaTargeted,
+        NoTarget,
+        Mobility,
+        Damage,
+        Healing,
+        Buff,
+        Ranged,
+        Melee,
+        AreaOfEffect,
+        Shield,
+        Sacrifice,
+        Execute,
+        Clone,
+        SingleTarget
+    }
+    
     public abstract class BaseAbility
     {
         public GridEntity AbilityUser { get; }
         
         public abstract int Cost { get; }
+        public abstract string Name { get; }
+        public abstract string Tooltip { get; }
+        public abstract HashSet<AbilityTag> Tags { get; }
 
-        public List<Vector2Int> GetArea()
+        public virtual List<Vector2Int> GetArea()
         {
-            var grid = GameArena.Instance.Grid;
-            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetAvailableNeighbours(x, y).ToList();
+            return GameArena.Instance.Grid.GetWholeGrid().ToList();
         }
 
-        public abstract IEnumerator Execute(Vector3 position, GridEntity target, Action onFinish);
+        public abstract IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish);
 
-        public virtual bool CanExecute(Vector3 position, GridEntity target)
+        public virtual bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
             return true;
         }

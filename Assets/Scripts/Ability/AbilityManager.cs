@@ -17,7 +17,7 @@ namespace Ability
 
         #endregion
 
-        public bool CanUse(BaseAbility ability, Vector3 position, GridEntity target)
+        public bool CanUse(BaseAbility ability, Vector3 position, GridEntity targetEntity)
         {
             if (TurnManager.Instance.CurrentTurn != ability.AbilityUser)
             {
@@ -33,7 +33,7 @@ namespace Ability
                 return false;
             }
             
-            if (!ability.CanExecute(position, target))
+            if (!ability.CanExecute(position, targetEntity))
             {
                 return false;
             }
@@ -41,11 +41,11 @@ namespace Ability
             return true;
         }
         
-        public void Use(BaseAbility ability, Vector3 position, GridEntity target, Action onSuccess, Action onFail)
+        public void Use(BaseAbility ability, Vector3 position, GridEntity targetEntity, Action onSuccess, Action onFail)
         {
             var turnManager = TurnManager.Instance;
 
-            if (!CanUse(ability, position, target))
+            if (!CanUse(ability, position, targetEntity))
             {
                 onFail();
                 return;
@@ -57,7 +57,7 @@ namespace Ability
                 return;
             }
 
-            StartCoroutine(ability.Execute(position, target, () =>
+            StartCoroutine(ability.Execute(position, targetEntity, () =>
             {
                 if (turnManager.ActionPoints == 0)
                 {

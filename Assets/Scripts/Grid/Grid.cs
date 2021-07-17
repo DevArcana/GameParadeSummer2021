@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Grid
@@ -50,20 +51,107 @@ namespace Grid
             return IsWithinGrid(x, y);
         }
 
-        public IEnumerable<Vector2Int> GetAvailableNeighbours(int x, int y)
+        public IEnumerable<Vector2Int> GetCardinalAtEdge(int x, int y, int axisDistance)
         {
-            var availableNeighbours = new List<Vector2Int>();
+            var tiles = new List<Vector2Int>();
             
-            if (IsWithinGrid(x - 1, y))
-                availableNeighbours.Add(new Vector2Int(x - 1, y));
-            if (IsWithinGrid(x + 1, y))
-                availableNeighbours.Add(new Vector2Int(x + 1, y));
-            if (IsWithinGrid(x, y - 1))
-                availableNeighbours.Add(new Vector2Int(x, y - 1));
-            if (IsWithinGrid(x, y + 1))
-                availableNeighbours.Add(new Vector2Int(x, y + 1));
+            if (IsWithinGrid(x - axisDistance, y))
+                tiles.Add(new Vector2Int(x - axisDistance, y));
+            if (IsWithinGrid(x + axisDistance, y))
+                tiles.Add(new Vector2Int(x + axisDistance, y));
+            if (IsWithinGrid(x, y - axisDistance))
+                tiles.Add(new Vector2Int(x, y - axisDistance));
+            if (IsWithinGrid(x, y + axisDistance))
+                tiles.Add(new Vector2Int(x, y + axisDistance));
 
-            return availableNeighbours;
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetAllCardinal(int x, int y, int axisDistance)
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var i = 1; i < axisDistance; i++)
+            {
+                tiles.AddRange(GetCardinalAtEdge(x, y, i));
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetOrdinalAtEdge(int x, int y, int diagonalDistance)
+        {
+            var tiles = new List<Vector2Int>();
+            
+            if (IsWithinGrid(x - diagonalDistance, y - diagonalDistance))
+                tiles.Add(new Vector2Int(x - diagonalDistance, y - diagonalDistance));
+            if (IsWithinGrid(x + diagonalDistance, y - diagonalDistance))
+                tiles.Add(new Vector2Int(x + diagonalDistance, y - diagonalDistance));
+            if (IsWithinGrid(x - diagonalDistance, y + diagonalDistance))
+                tiles.Add(new Vector2Int(x - diagonalDistance, y + diagonalDistance));
+            if (IsWithinGrid(x + diagonalDistance, y + diagonalDistance))
+                tiles.Add(new Vector2Int(x + diagonalDistance, y + diagonalDistance));
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetAllOrdinal(int x, int y, int diagonalDistance)
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var i = 1; i < diagonalDistance; i++)
+            {
+                tiles.AddRange(GetOrdinalAtEdge(x, y, i));
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetFilledSquareArea(int x, int y, int radius)
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var tx = x - radius; tx <= x + radius; tx++)
+            {
+                for (var ty = y - radius; ty <= y + radius; ty++)
+                {
+                    if (IsWithinGrid(tx, ty))
+                        tiles.Add(new Vector2Int(tx, ty));
+                }
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetFilledDiamondArea(int x, int y, int radius)
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var tx = x - radius; tx <= x + radius; tx++)
+            {
+                for (var ty = y - radius; ty <= y + radius; ty++)
+                {
+                    if (IsWithinGrid(tx, ty) && Math.Abs(x - tx) + Math.Abs(y - ty) <= radius)
+                        tiles.Add(new Vector2Int(tx, ty));
+                }
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetWholeGrid()
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    tiles.Add(new Vector2Int(x, y));
+                }
+            }
+
+            return tiles;
         }
 
         public void WorldToGrid(Vector3 worldPos, out int x, out int y)

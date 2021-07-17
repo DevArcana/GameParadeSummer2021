@@ -50,15 +50,22 @@ namespace Arena
             finish?.Invoke();
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(float amount)
         {
-            health -= damage;
+            health -= amount;
 
             if (health <= 0)
             {
                 Destroy(gameObject);
                 return;
             }
+            
+            healthBar.SetHealth(health, maxHealth);
+        }
+
+        public void Heal(float amount)
+        {
+            health = Math.Min(health + amount, maxHealth);
             
             healthBar.SetHealth(health, maxHealth);
         }

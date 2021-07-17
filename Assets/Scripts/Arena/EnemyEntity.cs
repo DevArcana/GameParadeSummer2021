@@ -2,6 +2,7 @@
 using System.Linq;
 using Ability;
 using Ability.Abilities;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Arena
@@ -39,7 +40,7 @@ namespace Arena
                 
             gameArena.Grid.WorldToGrid(position, out var x, out var y);
 
-            var moves = gameArena.Grid.GetAvailableNeighbours(x, y).ToList();
+            var moves = gameArena.Grid.GetCardinalAtEdge(x, y, 1).ToList();
             var move = moves.ElementAt(Random.Range(0, moves.Count));
 
             position = gameArena.Grid.GridToWorld(move.x, move.y);
