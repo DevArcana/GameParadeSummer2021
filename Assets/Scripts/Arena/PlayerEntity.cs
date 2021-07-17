@@ -17,10 +17,10 @@ namespace Arena
             
             _camera = Camera.main;
             _canMove = true;
-            health = maxHealth = 20;
-            strength = 4;
-            agility = 2;
-            focus = 2;
+            if (health == 0 || maxHealth == 0) health = maxHealth = 20;
+            if (strength == 0) strength = 4;
+            if (agility == 0) agility = 2;
+            if (focus == 0) focus = 2;
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;

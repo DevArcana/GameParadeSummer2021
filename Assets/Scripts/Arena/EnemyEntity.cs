@@ -16,10 +16,10 @@ namespace Arena
         {
             base.Start();
             TurnManager.Instance.TurnStarted += OnTurnStarted;
-            health = maxHealth = 8;
-            strength = 2;
-            agility = 2;
-            focus = 2;
+            if (health == 0 || maxHealth == 0) health = maxHealth = 8;
+            if (strength == 0) strength = 2;
+            if (agility == 0) agility = 2;
+            if (focus == 0) focus = 2;
             healthBar.SetHealth(health, maxHealth);
 
             _basicMove = new BasicMoveAbility(this);
