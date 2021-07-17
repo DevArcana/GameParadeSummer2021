@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Arena;
 using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class MassacreAbility : BaseAbility
+    public class ArmageddonAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
-        public override string Name => "Massacre";
-        public override string Tooltip => $"Deal {Damage} (2 + {StrengthPercentage.ToPercentage()} STR) damage to all enemy units.";
+        public override string Name => "Armageddon";
+        public override string Tooltip => $"Deal {Damage} (4 + {StrengthPercentage.ToPercentage()} STR) damage to ALL units - yourself, ally and enemy.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -21,9 +20,9 @@ namespace Ability.Abilities
         };
 
         public float StrengthPercentage = 0.5f;
-        public float Damage => 2 + StrengthPercentage * AbilityUser.strength;
+        public float Damage => 4 + StrengthPercentage * AbilityUser.strength;
         
-        public MassacreAbility(GridEntity user) : base(user)
+        public ArmageddonAbility(GridEntity user) : base(user)
         {
         }
 
@@ -34,9 +33,9 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            foreach (var enemy in TurnManager.Instance.EnqueuedEntities.Where(x => x.GetType() != AbilityUser.GetType()))
+            foreach (var unit in TurnManager.Instance.EnqueuedEntities)
             {
-                enemy.TakeDamage(Damage);
+                unit.TakeDamage(Damage);
             }
             
             onFinish.Invoke();

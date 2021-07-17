@@ -8,7 +8,7 @@ namespace Ability.Abilities
 {
     public class ExecuteAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
         public override string Name => "Execute";
         public override string Tooltip => $"Deal {Damage} (2 + {DamageStrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit. If targeted unit has {ExecuteThreshold} (4 + {ExecuteStrengthPercentage.ToPercentage()} STR) or less health, execute it.";

@@ -8,7 +8,7 @@ namespace Ability.Abilities
 {
     public class BuffStrengthAbility : BaseAbility
     {
-        public override int Cost => 1;
+        public override int Cost => 2;
 
         public override string Name => "Buff Strength";
         public override string Tooltip => $"Permanently increase your Strength by {StrengthIncrease} (0.5 + {FocusPercentage.ToPercentage()}% FOC)";

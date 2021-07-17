@@ -9,7 +9,7 @@ namespace Ability.Abilities
 {
     public class SalvationAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
         public override string Name => "Salvation";
         public override string Tooltip => $"Restore {Heal} (3 + {FocusPercentage.ToPercentage()} FOC) health to all allied units.";

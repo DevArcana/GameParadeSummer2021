@@ -9,7 +9,7 @@ namespace Ability.Abilities
 {
     public class CloneAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
         public override string Name => "Clone";
         public override string Tooltip => $"Spawn a clone next to you based on your attributes. This clone will have {HealthDecreasePercentage} ((60 - {HealthFocusPercentage.ToPercentage()})%) less health and {AttributesDecreasePercentage} ((60 - {AttributesFocusPercentage.ToPercentage()})%) worse attributes. This ability cannot spawn a clone with 4 or less health.";
