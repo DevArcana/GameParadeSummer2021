@@ -8,7 +8,7 @@ namespace Grid
 {
     public class Grid<T> : IEnumerable<(int, int, T)>, IEnumerable
     {
-        private readonly int _width, _height;
+        public readonly int width, height;
         private readonly float _cellSize;
         private readonly T[,] _data;
         private readonly Vector3 _origin;
@@ -28,8 +28,8 @@ namespace Grid
 
         public Grid(int width, int height, float cellSize, Vector3 origin, Func<Grid<T>, int, int, T> defaultValueFunc = null)
         {
-            _width = width;
-            _height = height;
+            this.width = width;
+            this.height = height;
             _cellSize = cellSize;
             _origin = origin;
             _data = new T[width, height];
@@ -43,7 +43,7 @@ namespace Grid
             }
         }
 
-        public bool IsWithinGrid(int x, int y) => x >= 0 && x < _width && y >= 0 && y < _height;
+        public bool IsWithinGrid(int x, int y) => x >= 0 && x < width && y >= 0 && y < height;
 
         public bool IsWithinGrid(Vector3 pos)
         {
@@ -143,9 +143,9 @@ namespace Grid
         {
             var tiles = new List<Vector2Int>();
 
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (var y = 0; y < _height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     tiles.Add(new Vector2Int(x, y));
                 }
@@ -199,9 +199,9 @@ namespace Grid
 
         public IEnumerator<(int, int, T)> GetEnumerator()
         {
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (var y = 0; y < _height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     yield return (x, y, _data[x, y]);
                 }
@@ -215,9 +215,9 @@ namespace Grid
 
         public (int, int) GetPosition(T entity)
         {
-            for (int i = 0; i < _width; i++)
+            for (int i = 0; i < width; i++)
             {
-                for (int j = 0; j < _height; j++)
+                for (int j = 0; j < height; j++)
                 {
                     if (entity.Equals(this[i, j]))
                     {
