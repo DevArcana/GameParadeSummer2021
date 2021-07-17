@@ -25,6 +25,7 @@ namespace Arena
         #endregion
 
         public Transform enemyPrefab;
+        public Transform allyPrefab;
 
         private void Start()
         {
@@ -59,7 +60,7 @@ namespace Arena
                 var x = Random.Range(0, 7);
                 var y = Random.Range(0, 7);
 
-                while (newEnemies.Contains((x, y)))
+                while (!(Grid[x, y] is null) || newEnemies.Contains((x, y)))
                 {
                     x = Random.Range(0, 7);
                     y = Random.Range(0, 7);
@@ -69,6 +70,20 @@ namespace Arena
                 var position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
                 Instantiate(enemyPrefab, position, Quaternion.identity);
             }
+        }
+
+        public void SpawnAlly(Vector3 position, float health, float strength, float focus, float agility)
+        {
+            Grid.WorldToGrid(position, out var x, out var y);
+            position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
+
+            var obj = Instantiate(allyPrefab, position, Quaternion.identity).GetComponent<PlayerEntity>();
+            obj.maxHealth = health;
+            obj.health = health;
+            obj.healthBar.SetHealth(health, health);
+            obj.strength = strength;
+            obj.focus = focus;
+            obj.agility = agility;
         }
 
         public IEnumerator Move(GridEntity entity, int x, int y, [CanBeNull] Action onFinish = null)

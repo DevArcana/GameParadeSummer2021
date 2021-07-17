@@ -6,7 +6,7 @@ using Ability.Abilities;
 using Interface;
 using JetBrains.Annotations;
 using UnityEngine;
-using Visuals;
+using Random = UnityEngine.Random;
 
 namespace Arena
 {
@@ -16,6 +16,8 @@ namespace Arena
         public Animator animator;
         public AudioClip[] moveSounds;
         private AudioSource _audio;
+
+        public string EntityName { get; set; } = Utilities.RandomizeName();
         
         public HealthBarUI healthBar;
 
@@ -31,7 +33,7 @@ namespace Arena
 
         #endregion
         
-        public float smoothTime = 0.3f;
+        public float smoothTime = 1.0f;
         private Vector3 _velocity;
 
         protected BasicMoveAbility moveAbility;
@@ -77,7 +79,22 @@ namespace Arena
 
         public void TakeDamage(float amount)
         {
-            health -= amount;
+            if (armour > 0)
+            {
+                if (amount > armour)
+                {
+                    health -= (amount - armour);
+                    armour = 0;
+                }
+                else
+                {
+                    armour -= amount;
+                }
+            }
+            else
+            {
+                health -= amount;
+            }
 
             if (health <= 0)
             {

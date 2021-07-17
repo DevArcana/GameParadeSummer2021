@@ -1,3 +1,4 @@
+using System;
 using Ability;
 using Arena;
 using TMPro;
@@ -18,7 +19,7 @@ public class AbilityBar : MonoBehaviour
     public TextMeshProUGUI abilityButtonText2;
     public TextMeshProUGUI abilityButtonText3;
 
-    private AbilitySlots _slots;
+    public AbilitySlots slots;
     
     private void Start()
     {
@@ -38,64 +39,74 @@ public class AbilityBar : MonoBehaviour
         });
 
         var turnManager = TurnManager.Instance;
-        _slots = turnManager.CurrentTurn.abilitySlots;
-        if (_slots != null)
+        turnManager.ActionPointsChanged += ActionPointsChanged;
+        slots = turnManager.CurrentTurn.abilitySlots;
+        if (slots != null)
         {
-            _slots.AbilitySelectionChanged += AbilitySelectionChanged;
+            slots.AbilitySelectionChanged += AbilitySelectionChanged;
         }
         RefreshSlots();
         turnManager.TurnStarted += OnTurnChange;
+    }
+
+    private void ActionPointsChanged(object sender, EventArgs e)
+    {
+        RefreshSlots();
     }
 
     private void OnTurnChange(object sender, TurnManager.OnTurnChangeEventArgs args)
     {
         if (args.Entity is PlayerEntity player)
         {
-            if (_slots != null)
+            if (slots != null)
             {
-                _slots.AbilitySelectionChanged -= AbilitySelectionChanged;
+                slots.AbilitySelectionChanged -= AbilitySelectionChanged;
             }
-            _slots = player.abilitySlots;
+            slots = player.abilitySlots;
+            slots.AbilitySelectionChanged += AbilitySelectionChanged;
+            
             RefreshSlots();
         }
     }
 
     private void RefreshSlots()
     {
-        if (_slots == null)
+        if (slots == null)
         {
             return;
         }
 
-        var slot = _slots.SelectedSlot;
-        
-        abilityButtonImage1.color = slot == 0 ? Color.gray : Color.white;
-        abilityButtonImage2.color = slot == 1 ? Color.gray : Color.white;
-        abilityButtonImage3.color = slot == 2 ? Color.gray : Color.white;
+        var slot = slots.SelectedSlot;
 
-        var ability1 = _slots.GetAbility(0);
-        abilityButtonText1.text = ability1 != null ? ability1.Name : "";
+        var ap = TurnManager.Instance.ActionPoints;
         
-        var ability2 = _slots.GetAbility(1);
-        abilityButtonText2.text = ability2 != null ? ability2.Name : "";
+        var ability = slots.GetAbility(0);
+        abilityButtonText1.text = ability != null ? ability.Name : "";
+        abilityButtonImage1.color = slot == 0 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
         
-        var ability3 = _slots.GetAbility(2);
-        abilityButtonText3.text = ability3 != null ? ability3.Name : "";
+        ability = slots.GetAbility(1);
+        abilityButtonText2.text = ability != null ? ability.Name : "";
+        abilityButtonImage2.color = slot == 1 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
+        
+        ability = slots.GetAbility(2);
+        abilityButtonText3.text = ability != null ? ability.Name : "";
+        abilityButtonImage3.color = slot == 2 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
     }
 
     private void SelectSlot(int slot)
     {
-        if (_slots == null)
+        if (slots == null)
         {
             return;
         }
 
-        if (_slots.SelectedSlot == slot)
+        if (slots.SelectedSlot == slot)
         {
-            _slots.Deselect();
+            slots.Deselect();
+            return;
         }
         
-        _slots.SelectAbility(slot);
+        slots.SelectAbility(slot);
     }
 
     private void AbilitySelectionChanged(object sender, AbilitySlots.AbilitySelectionChangedEventArgs args)

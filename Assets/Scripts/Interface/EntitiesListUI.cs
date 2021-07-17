@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Arena;
+using TMPro;
 using UnityEngine;
 
 namespace Interface
@@ -26,7 +27,9 @@ namespace Interface
                     prefab = playerIndicatorPrefab;
                 }
             
-                _queue.Add((Instantiate(prefab, transform).GetComponent<Animator>(), entity));
+                var instance = Instantiate(prefab, transform);
+                instance.GetComponentInChildren<TextMeshProUGUI>().text = entity.EntityName;
+                _queue.Add((instance.GetComponent<Animator>(), entity));
             }
         }
         
@@ -38,7 +41,10 @@ namespace Interface
             {
                 prefab = playerIndicatorPrefab;
             }
-            _queue.Add((Instantiate(prefab, transform).GetComponent<Animator>(), entity));
+
+            var instance = Instantiate(prefab, transform);
+            instance.GetComponentInChildren<TextMeshProUGUI>().text = entity.EntityName;
+            _queue.Add((instance.GetComponent<Animator>(), entity));
         }
 
         private void OnEntityDequeued(object sender, TurnManager.EntityEventArgs args)
@@ -62,7 +68,9 @@ namespace Interface
                 prefab = playerIndicatorPrefab;
             }
             
-            _queue.Add((Instantiate(prefab, transform).GetComponent<Animator>(), gridEntity));
+            var instance = Instantiate(prefab, transform);
+            instance.GetComponentInChildren<TextMeshProUGUI>().text = gridEntity.EntityName;
+            _queue.Add((instance.GetComponent<Animator>(), gridEntity));
         }
     }
 }
