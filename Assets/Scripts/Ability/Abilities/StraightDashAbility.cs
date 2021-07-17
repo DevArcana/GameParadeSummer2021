@@ -12,13 +12,14 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Straight Dash";
-        public override string Tooltip => $"Dash {DashDistance} units in a cardinal direction. Dash through any enemies";
+        public override string Tooltip => $"Dash up to {Distance} (2 + {AgilityPercentage.ToPercentage()} AGL) units in any cardinal direction, ignoring any enemies on the way.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
         };
 
-        public int DashDistance = 3;
+        public float AgilityPercentage = 0.5f;
+        public int Distance => (int) (2 + AgilityPercentage * AbilityUser.agility);
         
         public StraightDashAbility(GridEntity user) : base(user)
         {
@@ -28,7 +29,7 @@ namespace Ability.Abilities
         {
             var grid = GameArena.Instance.Grid;
             grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetCardinalAtEdge(x, y, DashDistance).ToList();
+            return grid.GetAllCardinal(x, y, Distance).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)

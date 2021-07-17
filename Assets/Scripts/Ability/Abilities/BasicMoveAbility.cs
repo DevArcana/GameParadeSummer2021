@@ -12,12 +12,15 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Move";
-        public override string Tooltip => "Move one tile in a cardinal direction.";
+        public override string Tooltip => $"Move up to {Distance} (1 + {AgilityPercentage.ToPercentage()} AGL) tile(s) in any cardinal direction.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Mobility,
             AbilityTag.AreaTargeted
         };
+
+        public float AgilityPercentage = 0.25f;
+        public int Distance => (int) (1 + AgilityPercentage * AbilityUser.agility);
 
         public BasicMoveAbility(GridEntity user) : base(user)
         {
@@ -27,7 +30,7 @@ namespace Ability.Abilities
         {
             var grid = GameArena.Instance.Grid;
             grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetCardinalAtEdge(x, y, 1).ToList();
+            return grid.GetAllCardinal(x, y, Distance).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)

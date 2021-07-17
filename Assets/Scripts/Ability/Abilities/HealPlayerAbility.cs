@@ -11,14 +11,15 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Heal Player";
-        public override string Tooltip => $"Restore {HealAmount} health to yourself.";
+        public override string Tooltip => $"Restore {Heal} (3 + {FocusPercentage.ToPercentage()} FOC) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Healing,
             AbilityTag.SelfTargeted
         };
 
-        public const int HealAmount = 4;
+        public float FocusPercentage = 0.5f;
+        public float Heal => 3 + FocusPercentage * AbilityUser.focus;
         
         public HealPlayerAbility(GridEntity user) : base(user)
         {
@@ -31,7 +32,7 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.Heal(HealAmount);
+            targetEntity.Heal(Heal);
             
             onFinish.Invoke();
             yield return null;

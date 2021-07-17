@@ -32,8 +32,8 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.TakeDamage(targetEntity.health);
-            AbilityUser.TakeDamage(AbilityUser.health);
+            targetEntity.Execute();
+            AbilityUser.Execute();
             
             onFinish.Invoke();
             yield return null;

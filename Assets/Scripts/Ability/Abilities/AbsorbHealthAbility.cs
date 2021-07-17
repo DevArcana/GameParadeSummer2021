@@ -9,10 +9,10 @@ namespace Ability.Abilities
 {
     public class AbsorbHealthAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 1;
 
         public override string Name => "Absorb Health";
-        public override string Tooltip => $"Deal {Damage} damage to a targeted enemy unit and restore {HealAmount} health to yourself.";
+        public override string Tooltip => $"Deal {Damage} (3 + {StrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit and restore {Heal} (1 + {FocusPercentage.ToPercentage()} FOC) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -22,8 +22,11 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public int Damage = 6;
-        public int HealAmount = 3;
+        public float StrengthPercentage = 0.5f;
+        public float Damage => 3 + StrengthPercentage * AbilityUser.strength;
+
+        public float FocusPercentage = 0.5f;
+        public float Heal => 1 + FocusPercentage * AbilityUser.focus;
         
         public AbsorbHealthAbility(GridEntity user) : base(user)
         {
@@ -42,7 +45,7 @@ namespace Ability.Abilities
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
             targetEntity.TakeDamage(Damage);
-            AbilityUser.Heal(HealAmount);
+            AbilityUser.Heal(Heal);
             
             onFinish.Invoke();
             yield return null;

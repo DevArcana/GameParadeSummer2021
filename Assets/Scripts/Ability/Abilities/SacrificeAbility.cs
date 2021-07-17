@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Sacrifice";
-        public override string Tooltip => $"Execute yourself and increase damage of all allied units by {DamageIncrease}";
+        public override string Tooltip => $"Execute yourself and increase strength of all allied units by {StrengthIncrease} (0.5 + {FocusPercentage.ToPercentage()} FOC)";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Sacrifice,
@@ -20,7 +20,8 @@ namespace Ability.Abilities
             AbilityTag.Buff
         };
 
-        public int DamageIncrease = 1;
+        public float FocusPercentage = 0.25f;
+        public float StrengthIncrease => 0.5f + FocusPercentage * AbilityUser.focus;
         
         public SacrificeAbility(GridEntity user) : base(user)
         {
@@ -34,11 +35,11 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            AbilityUser.TakeDamage(AbilityUser.health);
+            AbilityUser.Execute();
             
             foreach (var ally in TurnManager.Instance.EnqueuedEntities.Where(x => x != AbilityUser && x.GetType() == AbilityUser.GetType()))
             {
-                ally.damage += 1;
+                ally.strength += StrengthIncrease;
             }
             
             onFinish.Invoke();

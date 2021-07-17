@@ -11,7 +11,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Suction";
-        public override string Tooltip => $"Deal {Damage} damage to a targeted enemy unit and increase your damage by {DamageIncrease}.";
+        public override string Tooltip => $"Deal {Damage} (2 + {StrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit and increase your strength by {StrengthIncrease} (0.5 + {FocusPercentage.ToPercentage()} FOC).";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -19,8 +19,11 @@ namespace Ability.Abilities
             AbilityTag.EnemyTargeted
         };
 
-        public int Damage = 2;
-        public int DamageIncrease = 1;
+        public float StrengthPercentage = 0.25f;
+        public float Damage => 2 + StrengthPercentage * AbilityUser.strength;
+
+        public float FocusPercentage = 0.25f;
+        public float StrengthIncrease => 0.5f + FocusPercentage * AbilityUser.focus;
         
         public SuctionAbility(GridEntity user) : base(user)
         {
@@ -34,7 +37,7 @@ namespace Ability.Abilities
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
             targetEntity.TakeDamage(Damage);
-            AbilityUser.damage += 1;
+            AbilityUser.strength += StrengthIncrease;
             
             onFinish.Invoke();
             yield return null;

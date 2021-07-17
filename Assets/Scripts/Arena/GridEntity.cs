@@ -18,9 +18,17 @@ namespace Arena
         
         public HealthBarUI healthBar;
 
+        #region Attributes
+        
+        public float strength;
+        public float focus;
+        public float agility;
+        
         public float health;
         public float maxHealth;
-        public float damage;
+        public float armour;
+
+        #endregion
         
         public float smoothTime = 1.0f;
         private Vector3 _velocity;
@@ -37,9 +45,7 @@ namespace Arena
             moveAbility = new BasicMoveAbility(this);
             attackAbility = new BasicAttackAbility(this);
             
-            abilitySlots.SetAbility(0, new StraightDashAbility(this));
-            abilitySlots.SetAbility(1, new FireballAbility(this));
-            abilitySlots.SetAbility(2, new KamikazeAbility(this));
+            abilitySlots.PopulateAbilities(this);
         }
 
         protected virtual void OnDestroy()
@@ -79,6 +85,12 @@ namespace Arena
             }
             
             healthBar.SetHealth(health, maxHealth);
+        }
+
+        public void Execute()
+        {
+            health = 0;
+            Destroy(gameObject);
         }
 
         public void Heal(float amount)

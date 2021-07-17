@@ -18,7 +18,9 @@ namespace Arena
             _camera = Camera.main;
             _canMove = true;
             health = maxHealth = 20;
-            damage = 4;
+            strength = 4;
+            agility = 2;
+            focus = 2;
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;
@@ -96,6 +98,7 @@ namespace Arena
             if (args.Entity == this)
             {
                 abilitySlots.Deselect();
+                abilitySlots.PopulateAbilities(this);
             }
         }
 
