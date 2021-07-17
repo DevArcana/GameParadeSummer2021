@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using Grid;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -51,17 +52,20 @@ namespace Arena
 
         private void SpawnEnemies(int count)
         {
+            var newEnemies = new List<(int, int)>();
+            
             for (var i = 0; i < count; i++)
             {
                 var x = Random.Range(0, 7);
                 var y = Random.Range(0, 7);
 
-                while (!(Grid[x, y] is null))
+                while (newEnemies.Contains((x, y)))
                 {
                     x = Random.Range(0, 7);
                     y = Random.Range(0, 7);
                 }
                 
+                newEnemies.Add((x, y));
                 var position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
                 Instantiate(enemyPrefab, position, Quaternion.identity);
             }

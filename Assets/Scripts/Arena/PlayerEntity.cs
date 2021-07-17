@@ -9,7 +9,7 @@ namespace Arena
     {
         private Camera _camera;
 
-        private bool _canMove = false;
+        private bool _canMove;
 
         protected override void Start()
         {
@@ -24,6 +24,8 @@ namespace Arena
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;
+            TurnManager.Instance.TurnEnded += OnTurnEnd;
+            
             abilitySlots.AbilitySelectionChanged += OnAbilitySelectionChanged;
             abilitySlots.Deselect();
         }
@@ -57,6 +59,7 @@ namespace Arena
                         {
                             _canMove = true;
                             abilitySlots.SetAbility(abilitySlots.SelectedSlot, null);
+                            abilitySlots.Deselect();
                         },
                         () =>
                         {
@@ -102,9 +105,18 @@ namespace Arena
             }
         }
 
+        private void OnTurnEnd(object sender, TurnManager.OnTurnChangeEventArgs args)
+        {
+            abilitySlots.SetAbility(0, null);
+            abilitySlots.SetAbility(1, null);
+            abilitySlots.SetAbility(2, null);
+            abilitySlots.Deselect();
+        }
+
         protected override void OnDestroy()
         {
             TurnManager.Instance.TurnStarted -= OnTurnStart;
+            TurnManager.Instance.TurnEnded -= OnTurnEnd;
             abilitySlots.AbilitySelectionChanged -= OnAbilitySelectionChanged;
             base.OnDestroy();
         }
