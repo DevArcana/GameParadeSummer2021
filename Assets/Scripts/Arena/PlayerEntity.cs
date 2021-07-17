@@ -58,8 +58,11 @@ namespace Arena
                         AbilityManager.Instance.Use(selectedAbility, hit.point, target, () =>
                         {
                             _canMove = true;
-                            abilitySlots.SetAbility(abilitySlots.SelectedSlot, null);
-                            abilitySlots.Deselect();
+                            if (abilitySlots.SelectedSlot != -1)
+                            {
+                                abilitySlots.SetAbility(abilitySlots.SelectedSlot, null);
+                                abilitySlots.Deselect();
+                            }
                         },
                         () =>
                         {

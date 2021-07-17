@@ -5824,8 +5824,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lerpFactor: 10
-  onHoverColor: {r: 0.011764706, g: 1, b: 0, a: 0}
-  onClickColor: {r: 0.003921569, g: 0.62352943, b: 0, a: 0}
+  onHoverColor: {r: 0.6226415, g: 0.6226415, b: 0.6226415, a: 0}
+  onClickColor: {r: 0.3584906, g: 0.3584906, b: 0.3584906, a: 0}
 --- !u!64 &8707774716938524527
 MeshCollider:
   m_ObjectHideFlags: 0
