@@ -1,3 +1,4 @@
+using System;
 using Ability;
 using Arena;
 using TMPro;
@@ -38,6 +39,7 @@ public class AbilityBar : MonoBehaviour
         });
 
         var turnManager = TurnManager.Instance;
+        turnManager.ActionPointsChanged += ActionPointsChanged;
         _slots = turnManager.CurrentTurn.abilitySlots;
         if (_slots != null)
         {
@@ -45,6 +47,11 @@ public class AbilityBar : MonoBehaviour
         }
         RefreshSlots();
         turnManager.TurnStarted += OnTurnChange;
+    }
+
+    private void ActionPointsChanged(object sender, EventArgs e)
+    {
+        RefreshSlots();
     }
 
     private void OnTurnChange(object sender, TurnManager.OnTurnChangeEventArgs args)
@@ -56,6 +63,8 @@ public class AbilityBar : MonoBehaviour
                 _slots.AbilitySelectionChanged -= AbilitySelectionChanged;
             }
             _slots = player.abilitySlots;
+            _slots.AbilitySelectionChanged += AbilitySelectionChanged;
+            
             RefreshSlots();
         }
     }
@@ -68,19 +77,20 @@ public class AbilityBar : MonoBehaviour
         }
 
         var slot = _slots.SelectedSlot;
-        
-        abilityButtonImage1.color = slot == 0 ? Color.gray : Color.white;
-        abilityButtonImage2.color = slot == 1 ? Color.gray : Color.white;
-        abilityButtonImage3.color = slot == 2 ? Color.gray : Color.white;
 
-        var ability1 = _slots.GetAbility(0);
-        abilityButtonText1.text = ability1 != null ? ability1.Name : "";
+        var ap = TurnManager.Instance.ActionPoints;
         
-        var ability2 = _slots.GetAbility(1);
-        abilityButtonText2.text = ability2 != null ? ability2.Name : "";
+        var ability = _slots.GetAbility(0);
+        abilityButtonText1.text = ability != null ? ability.Name : "";
+        abilityButtonImage1.color = slot == 0 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
         
-        var ability3 = _slots.GetAbility(2);
-        abilityButtonText3.text = ability3 != null ? ability3.Name : "";
+        ability = _slots.GetAbility(1);
+        abilityButtonText2.text = ability != null ? ability.Name : "";
+        abilityButtonImage2.color = slot == 1 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
+        
+        ability = _slots.GetAbility(2);
+        abilityButtonText3.text = ability != null ? ability.Name : "";
+        abilityButtonImage3.color = slot == 2 ? new Color(0.7f, 0.7f, 0.7f) : ability == null || ability.Cost > ap ? Color.gray : Color.white;
     }
 
     private void SelectSlot(int slot)
@@ -93,6 +103,7 @@ public class AbilityBar : MonoBehaviour
         if (_slots.SelectedSlot == slot)
         {
             _slots.Deselect();
+            return;
         }
         
         _slots.SelectAbility(slot);
