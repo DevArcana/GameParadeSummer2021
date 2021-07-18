@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Clone";
-        public override string Tooltip => $"Spawn a clone next to you based on your attributes. This clone will have {HealthPercentage.ToPercentage(false)} ((40 + {HealthFocusPercentage.ToPercentage(false)} Focus)%) of your health and {AttributesPercentage.ToPercentage(false)} ((40 + {AttributesFocusPercentage.ToPercentage(false)} Focus)%) of your Strength, Focus and Agility. This ability cannot spawn a clone with 4 or less health.";
+        public override string Tooltip => $"Spawn a clone next to you based on your attributes. This clone will have {HealthPercentage.ToPercentage()} ((40 + {HealthFocusPercentage.ToPercentage(false)} Focus)%) of your health and {AttributesPercentage.ToPercentage()} ((40 + {AttributesFocusPercentage.ToPercentage(false)} Focus)%) of your Strength, Focus and Agility. This ability cannot spawn a clone with 4 or less health.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
@@ -20,7 +20,7 @@ namespace Ability.Abilities
 
         public float HealthFocusPercentage = 0.05f;
         public float HealthPercentage => Math.Max(0, 0.4f + HealthFocusPercentage * AbilityUser.focus);
-        public float AttributesFocusPercentage = 0.1f;
+        public float AttributesFocusPercentage = 0.04f;
         public float AttributesPercentage => Math.Max(0, 0.4f + AttributesFocusPercentage * AbilityUser.focus);
         
         public CloneAbility(GridEntity user) : base(user)

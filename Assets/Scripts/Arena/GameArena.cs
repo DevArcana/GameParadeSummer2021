@@ -69,7 +69,7 @@ namespace Arena
             var newEnemies = new List<(int, int)>();
             var health = 2.0f + wave;
             var armour = Math.Max(0, -3.0f + wave);
-            var strength = 1.5f + 0.5f * wave;
+            var strength = 1.25f + 0.25f * wave;
             var focus = 0.5f + 0.5f * wave;
             var agility = 0.5f + 0.5f * wave;
 

@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Implode";
-        public override string Tooltip => $"Deal 2 damage to all enemies in a diamond-shaped area around you. Damage is increased by {PerEnemyDamage} (2 + {StrengthPercentage.ToPercentage()} Strength) for each enemy in the area.";
+        public override string Tooltip => $"Deal 4 damage to all enemies in a diamond-shaped area around you. Damage is increased by {PerEnemyDamage} (1 + {StrengthPercentage.ToPercentage()} Strength) for each enemy in the area.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -21,7 +21,7 @@ namespace Ability.Abilities
         };
 
         public float StrengthPercentage = 0.5f;
-        public float PerEnemyDamage => 2 + StrengthPercentage * AbilityUser.strength;
+        public float PerEnemyDamage => 1 + StrengthPercentage * AbilityUser.strength;
         
         public ImplodeAbility(GridEntity user) : base(user)
         {
@@ -51,7 +51,7 @@ namespace Ability.Abilities
             
             foreach (var enemy in enemies)
             {
-                enemy.TakeDamage(2 + count * PerEnemyDamage);
+                enemy.TakeDamage(4 + count * PerEnemyDamage);
             }
             
             onFinish.Invoke();
