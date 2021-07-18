@@ -59,4 +59,7 @@ sysinfo.txt
 crashlytics-build.properties
 
 # Ignore deploy
+deploy/
+/deploy/
+deploy
 /deploy
