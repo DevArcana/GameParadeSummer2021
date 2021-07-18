@@ -165,9 +165,9 @@ namespace Grid
         {
             var tiles = new List<Vector2Int>();
 
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (var y = 0; y < _height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     var entity = _data[x, y];
                     if (!(entity is null) && entity is EnemyEntity)
@@ -184,9 +184,9 @@ namespace Grid
         {
             var tiles = new List<Vector2Int>();
 
-            for (var x = 0; x < _width; x++)
+            for (var x = 0; x < width; x++)
             {
-                for (var y = 0; y < _height; y++)
+                for (var y = 0; y < height; y++)
                 {
                     var entity = _data[x, y];
                     if (!(x == positionToExclude.x && y == positionToExclude.y) && !(entity is null) && entity is PlayerEntity)
