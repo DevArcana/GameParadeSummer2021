@@ -65,8 +65,10 @@ namespace Arena
             var strength = 0.5f + 0.5f * wave;
             var focus = 0.5f + 0.5f * wave;
             var agility = 0.5f + 0.5f * wave;
+
+            var enemiesCount = wave / 2 + 1;
             
-            for (var i = 0; i < wave; i++)
+            for (var i = 0; i < enemiesCount; i++)
             {
                 var x = Random.Range(0, 7);
                 var y = Random.Range(0, 7);
