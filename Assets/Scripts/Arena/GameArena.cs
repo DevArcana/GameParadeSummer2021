@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.ExceptionServices;
+using Ability;
 using Grid;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -47,13 +48,19 @@ namespace Arena
         {
             if (!_destroyed)
             {
-                foreach (var ally in TurnManager.Instance.EnqueuedEntities.Where(x => x is PlayerEntity))
+                var turnManager = TurnManager.Instance;
+                foreach (var ally in turnManager.EnqueuedEntities.Where(x => x is PlayerEntity))
                 {
                     ally.health = ally.maxHealth;
                     ally.healthBar.SetHealth(ally.maxHealth, ally.maxHealth);
                 }
+                turnManager.ResetActionPoints();
+                
                 var waveManager = (WaveManager) sender;
                 SpawnEnemies(waveManager.CurrentWave);
+                
+                turnManager.CurrentTurn.abilitySlots.PopulateAbilities(turnManager.CurrentTurn);
+                turnManager.CurrentTurn.abilitySlots.Deselect();
             }
         }
 

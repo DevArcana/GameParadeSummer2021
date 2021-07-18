@@ -107,8 +107,7 @@ namespace Arena
             }
             
             AbilityAreaDisplay.Instance.ClearDisplay();
-            ActionPoints = 3;
-            OnActionPointsChanged();
+            ResetActionPoints();
             
             var last = CurrentTurn;
             EnqueuedEntities.RemoveAt(0);
@@ -168,6 +167,12 @@ namespace Arena
         private void Restart()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+
+        public void ResetActionPoints()
+        {
+            ActionPoints = 3;
+            OnActionPointsChanged();
         }
     }
 }
