@@ -51,6 +51,16 @@ namespace Arena
             abilitySlots.PopulateAbilities(this);
         }
 
+        public void SetAttributes(float maxHealth, float armour, float strength, float focus, float agility)
+        {
+            this.maxHealth = maxHealth;
+            this.health = maxHealth;
+            this.armour = armour;
+            this.strength = strength;
+            this.focus = focus;
+            this.agility = agility;
+        }
+
         protected virtual void OnDestroy()
         {
             var arena = GameArena.Instance;

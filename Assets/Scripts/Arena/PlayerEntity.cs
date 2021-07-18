@@ -17,10 +17,7 @@ namespace Arena
             
             _camera = Camera.main;
             _canMove = true;
-            if (health == 0 || maxHealth == 0) health = maxHealth = 20;
-            if (strength == 0) strength = 4;
-            if (agility == 0) agility = 2;
-            if (focus == 0) focus = 2;
+            EnsureValidAttributes();
             healthBar.SetHealth(health, maxHealth);
 
             TurnManager.Instance.TurnStarted += OnTurnStart;
@@ -28,6 +25,14 @@ namespace Arena
             
             abilitySlots.AbilitySelectionChanged += OnAbilitySelectionChanged;
             abilitySlots.Deselect();
+        }
+
+        public void EnsureValidAttributes()
+        {
+            if (health == 0 || maxHealth == 0) health = maxHealth = 20;
+            if (strength == 0) strength = 4;
+            if (agility == 0) agility = 2;
+            if (focus == 0) focus = 2;
         }
         
         private void OnAbilitySelectionChanged(object sender, AbilitySlots.AbilitySelectionChangedEventArgs args)

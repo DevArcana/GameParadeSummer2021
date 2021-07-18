@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using Grid;
 using JetBrains.Annotations;
@@ -46,17 +47,26 @@ namespace Arena
         {
             if (!_destroyed)
             {
+                foreach (var ally in TurnManager.Instance.EnqueuedEntities.Where(x => x is PlayerEntity))
+                {
+                    ally.health = ally.maxHealth;
+                    ally.healthBar.SetHealth(ally.maxHealth, ally.maxHealth);
+                }
                 var waveManager = (WaveManager) sender;
-                var count = waveManager.CurrentWave;
-                SpawnEnemies(count);
+                SpawnEnemies(waveManager.CurrentWave);
             }
         }
 
-        private void SpawnEnemies(int count)
+        private void SpawnEnemies(int wave)
         {
             var newEnemies = new List<(int, int)>();
+            var health = 3.0f + wave;
+            var armour = Math.Max(0, -5.0f + wave);
+            var strength = 0.5f + 0.5f * wave;
+            var focus = 0.5f + 0.5f * wave;
+            var agility = 0.5f + 0.5f * wave;
             
-            for (var i = 0; i < count; i++)
+            for (var i = 0; i < wave; i++)
             {
                 var x = Random.Range(0, 7);
                 var y = Random.Range(0, 7);
@@ -69,7 +79,8 @@ namespace Arena
                 
                 newEnemies.Add((x, y));
                 var position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
-                Instantiate(enemyPrefab, position, Quaternion.identity);
+                var entity = Instantiate(enemyPrefab, position, Quaternion.identity).GetComponent<EnemyEntity>();
+                entity.SetAttributes(health, armour, strength, focus, agility);
             }
         }
 

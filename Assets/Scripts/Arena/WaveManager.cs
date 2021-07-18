@@ -23,7 +23,7 @@ namespace Arena
             WaveChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        private int _currentWave;
+        private int _currentWave = 1;
 
         public int CurrentWave
         {
