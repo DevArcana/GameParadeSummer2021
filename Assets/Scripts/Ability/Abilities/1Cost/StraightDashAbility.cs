@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Straight Dash";
-        public override string Tooltip => $"Dash up to {Distance} (2 + {AgilityPercentage.ToPercentage()} AGL) units in any cardinal direction, ignoring any enemies on the way.";
+        public override string Tooltip => $"Dash up to {Distance} (2 + {AgilityPercentage.ToPercentage()} Agility) units in any cardinal direction, ignoring any enemies on the way.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
@@ -34,7 +34,9 @@ namespace Ability.Abilities
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return targetEntity is null;
+            var arena = GameArena.Instance;
+            arena.Grid.WorldToGrid(position, out var x, out var y);
+            return arena.CanMove(AbilityUser, x, y);
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)

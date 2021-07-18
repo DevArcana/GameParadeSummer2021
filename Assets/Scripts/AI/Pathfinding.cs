@@ -148,7 +148,7 @@ namespace AI
         {
             var path = new List<PathNode>();
             var currentNode = endNode;
-            while (currentNode.previousNode.previousNode != null)
+            while (currentNode.previousNode?.previousNode != null)
             {
                 path.Add(currentNode.previousNode);
                 currentNode = currentNode.previousNode;

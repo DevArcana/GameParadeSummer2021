@@ -11,7 +11,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Buff Agility";
-        public override string Tooltip => $"Permanently increase your Agility by {AgilityIncrease} (0.5 + {FocusPercentage.ToPercentage()}% Focus)";
+        public override string Tooltip => $"Permanently increase your Agility by {AgilityIncrease} (0.5 + {FocusPercentage.ToPercentage()} Focus)";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             

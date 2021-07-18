@@ -20,8 +20,8 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public float StrengthPercentage = 0.5f;
-        public float Damage => 1 + StrengthPercentage * AbilityUser.strength;
+        public float StrengthPercentage = 1.0f;
+        public float Damage => 2 + StrengthPercentage * AbilityUser.strength;
         
         public FireballAbility(GridEntity user) : base(user)
         {

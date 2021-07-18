@@ -20,7 +20,7 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public float StrengthPercentage = 0.5f;
+        public float StrengthPercentage = 1.0f;
         public float Damage => 1 + StrengthPercentage * AbilityUser.strength;
         
         public ArrowAbility(GridEntity user) : base(user)
