@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Visuals;
 
 namespace Arena
@@ -100,6 +101,11 @@ namespace Arena
 
         public void NextTurn()
         {
+            if (EnqueuedEntities.Count(x => x is PlayerEntity) == 0)
+            {
+                Invoke(nameof(Restart), 2);
+            }
+            
             AbilityAreaDisplay.Instance.ClearDisplay();
             ActionPoints = 3;
             OnActionPointsChanged();
@@ -157,6 +163,11 @@ namespace Arena
             {
                 WaveManager.Instance.NextWave();
             }
+        }
+        
+        private void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
