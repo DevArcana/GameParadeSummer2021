@@ -15,7 +15,7 @@ namespace Interface
         private void OnMouseEnter()
         {
             var tooltip =
-                $"{_entity.EntityName}\nHealth: {_entity.health}/{_entity.maxHealth}\nStrength: {_entity.strength}\nFocus: {_entity.focus}\nAgility: {_entity.agility}";
+                $"{_entity.EntityName}\nHealth: {_entity.health}/{_entity.maxHealth}\nArmour: {_entity.armour}\nStrength: {_entity.strength}\nFocus: {_entity.focus}\nAgility: {_entity.agility}";
             Tooltip.Instance.Enable(tooltip);
         }
 

@@ -7,22 +7,23 @@ using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class HealAllyAbility : BaseAbility
+    public class PunchAbility : BaseAbility
     {
         public override int Cost => 1;
 
-        public override string Name => "Heal Ally";
-        public override string Tooltip => $"Restore {Heal} (2 + {FocusPercentage.ToPercentage()} FOC) health to an allied unit other than yourself.";
+        public override string Name => "Punch";
+        public override string Tooltip => $"Deal {Damage} (1 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
-            AbilityTag.Healing,
-            AbilityTag.SelfTargeted
+            AbilityTag.Damage,
+            AbilityTag.EnemyTargeted,
+            AbilityTag.Ranged
         };
 
-        public float FocusPercentage = 0.5f;
-        public float Heal => 2 + FocusPercentage * AbilityUser.focus;
+        public float StrengthPercentage = 1.0f;
+        public float Damage => 1 + StrengthPercentage * AbilityUser.strength;
         
-        public HealAllyAbility(GridEntity user) : base(user)
+        public PunchAbility(GridEntity user) : base(user)
         {
         }
 
@@ -30,17 +31,17 @@ namespace Ability.Abilities
         {
             var grid = GameArena.Instance.Grid;
             grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetAllAllies(new Vector2Int(x, y)).ToList();
+            return grid.GetFilledSquareArea(x, y, 1).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return !(targetEntity is null) && targetEntity != AbilityUser && targetEntity.GetType() == AbilityUser.GetType() && targetEntity.health < targetEntity.maxHealth;
+            return !(targetEntity is null) && targetEntity.GetType() != AbilityUser.GetType();
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.Heal(Heal);
+            targetEntity.TakeDamage(Damage);
             
             onFinish.Invoke();
             yield return null;

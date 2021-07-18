@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Arena;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -49,6 +51,11 @@ namespace Grid
         {
             WorldToGrid(pos, out var x, out var y);
             return IsWithinGrid(x, y);
+        }
+
+        public IEnumerable<T> GetEnemiesInArea(IEnumerable<Vector2Int> area)
+        {
+            return area.Select(x => _data[x.x, x.y]).Where(x => !(x is null) && x is EnemyEntity);
         }
 
         public IEnumerable<Vector2Int> GetCardinalAtEdge(int x, int y, int axisDistance)
@@ -151,6 +158,51 @@ namespace Grid
                 }
             }
 
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetAllEnemies()
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    var entity = _data[x, y];
+                    if (!(entity is null) && entity is EnemyEntity)
+                    {
+                        tiles.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetAllAllies(Vector2Int positionToExclude = default)
+        {
+            var tiles = new List<Vector2Int>();
+
+            for (var x = 0; x < _width; x++)
+            {
+                for (var y = 0; y < _height; y++)
+                {
+                    var entity = _data[x, y];
+                    if (!(x == positionToExclude.x && y == positionToExclude.y) && !(entity is null) && entity is PlayerEntity)
+                    {
+                        tiles.Add(new Vector2Int(x, y));
+                    }
+                }
+            }
+
+            return tiles;
+        }
+
+        public IEnumerable<Vector2Int> GetAllEntities()
+        {
+            var tiles = new List<Vector2Int>(GetAllEnemies());
+            tiles.AddRange(GetAllAllies(new Vector2Int(-1, -1)));
             return tiles;
         }
 

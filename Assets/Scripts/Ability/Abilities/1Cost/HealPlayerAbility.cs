@@ -25,6 +25,13 @@ namespace Ability.Abilities
         {
         }
 
+        public override List<Vector2Int> GetArea()
+        {
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return new List<Vector2Int> {new Vector2Int(x, y)};
+        }
+
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
             return !(targetEntity is null) && targetEntity == AbilityUser && targetEntity.health < targetEntity.maxHealth;

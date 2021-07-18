@@ -27,6 +27,13 @@ namespace Ability.Abilities
         {
         }
 
+        public override List<Vector2Int> GetArea()
+        {
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return grid.GetAllAllies(new Vector2Int(-1, -1)).ToList();
+        }
+
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
             return TurnManager.Instance.EnqueuedEntities.Any(x =>

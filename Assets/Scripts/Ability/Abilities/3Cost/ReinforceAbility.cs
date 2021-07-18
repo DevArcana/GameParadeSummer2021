@@ -7,22 +7,23 @@ using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class HealAllyAbility : BaseAbility
+    public class ReinforceAbility : BaseAbility
     {
-        public override int Cost => 1;
+        public override int Cost => 3;
 
-        public override string Name => "Heal Ally";
-        public override string Tooltip => $"Restore {Heal} (2 + {FocusPercentage.ToPercentage()} FOC) health to an allied unit other than yourself.";
+        public override string Name => "Reinforce";
+        public override string Tooltip => $"Increase armour of all allies, including yourself, by {ArmourIncrease} (3 + {FocusPercentage.ToPercentage()} Focus)";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
-            AbilityTag.Healing,
-            AbilityTag.SelfTargeted
+            AbilityTag.Damage,
+            AbilityTag.NoTarget,
+            AbilityTag.AreaOfEffect
         };
 
         public float FocusPercentage = 0.5f;
-        public float Heal => 2 + FocusPercentage * AbilityUser.focus;
+        public float ArmourIncrease => 3 + FocusPercentage * AbilityUser.focus;
         
-        public HealAllyAbility(GridEntity user) : base(user)
+        public ReinforceAbility(GridEntity user) : base(user)
         {
         }
 
@@ -30,17 +31,20 @@ namespace Ability.Abilities
         {
             var grid = GameArena.Instance.Grid;
             grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetAllAllies(new Vector2Int(x, y)).ToList();
+            return grid.GetAllAllies(new Vector2Int(-1, -1)).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return !(targetEntity is null) && targetEntity != AbilityUser && targetEntity.GetType() == AbilityUser.GetType() && targetEntity.health < targetEntity.maxHealth;
+            return true;
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.Heal(Heal);
+            foreach (var unit in TurnManager.Instance.EnqueuedEntities.Where(x => x is PlayerEntity))
+            {
+                unit.armour += ArmourIncrease;
+            }
             
             onFinish.Invoke();
             yield return null;

@@ -8,9 +8,9 @@ using Random = UnityEngine.Random;
 
 public static class Utilities
 {
-    public static string ToPercentage(this float number)
+    public static string ToPercentage(this float number, bool addPercentSign = true)
     {
-        return (number * 100).ToString("F0") + "%";
+        return (number * 100).ToString("F0") + (addPercentSign ? "%" : "");
     }
     
     private static readonly string[] FirstNames =

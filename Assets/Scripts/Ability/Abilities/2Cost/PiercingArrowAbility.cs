@@ -7,23 +7,23 @@ using UnityEngine;
 
 namespace Ability.Abilities
 {
-    public class ArmageddonAbility : BaseAbility
+    public class PiercingArrowAbility : BaseAbility
     {
-        public override int Cost => 3;
+        public override int Cost => 2;
 
-        public override string Name => "Armageddon";
-        public override string Tooltip => $"Deal {Damage} (4 + {StrengthPercentage.ToPercentage()} STR) damage to ALL units - yourself, ally and enemy.";
+        public override string Name => "Piercing Arrow";
+        public override string Tooltip => $"Fire a piercing arrow in any cardinal direction that deals {Damage} (2 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit. This damage ignores armour.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
-            AbilityTag.NoTarget,
-            AbilityTag.AreaOfEffect
+            AbilityTag.EnemyTargeted,
+            AbilityTag.Ranged
         };
 
-        public float StrengthPercentage = 0.5f;
-        public float Damage => 4 + StrengthPercentage * AbilityUser.strength;
+        public float StrengthPercentage = 0.75f;
+        public float Damage => 2 + StrengthPercentage * AbilityUser.strength;
         
-        public ArmageddonAbility(GridEntity user) : base(user)
+        public PiercingArrowAbility(GridEntity user) : base(user)
         {
         }
 
@@ -31,20 +31,17 @@ namespace Ability.Abilities
         {
             var grid = GameArena.Instance.Grid;
             grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
-            return grid.GetAllEntities().ToList();
+            return grid.GetAllCardinal(x, y, 4).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return true;
+            return !(targetEntity is null) && targetEntity.GetType() != AbilityUser.GetType();
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            foreach (var unit in TurnManager.Instance.EnqueuedEntities)
-            {
-                unit.TakeDamage(Damage);
-            }
+            targetEntity.TakeDamage(Damage, true);
             
             onFinish.Invoke();
             yield return null;

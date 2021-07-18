@@ -12,16 +12,16 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Clone";
-        public override string Tooltip => $"Spawn a clone next to you based on your attributes. This clone will have {HealthDecreasePercentage} ((60 - {HealthFocusPercentage.ToPercentage()})%) less health and {AttributesDecreasePercentage} ((60 - {AttributesFocusPercentage.ToPercentage()})%) worse attributes. This ability cannot spawn a clone with 4 or less health.";
+        public override string Tooltip => $"Spawn a clone next to you based on your attributes. This clone will have {HealthPercentage.ToPercentage(false)} ((40 + {HealthFocusPercentage.ToPercentage(false)} Focus)%) of your health and {AttributesPercentage.ToPercentage(false)} ((40 + {AttributesFocusPercentage.ToPercentage(false)} Focus)%) of your Strength, Focus and Agility. This ability cannot spawn a clone with 4 or less health.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
         };
 
         public float HealthFocusPercentage = 0.05f;
-        public float HealthDecreasePercentage => Math.Max(0, 0.6f - HealthFocusPercentage * AbilityUser.focus);
+        public float HealthPercentage => Math.Max(0, 0.4f + HealthFocusPercentage * AbilityUser.focus);
         public float AttributesFocusPercentage = 0.1f;
-        public float AttributesDecreasePercentage => Math.Max(0, 0.6f - AttributesFocusPercentage * AbilityUser.focus);
+        public float AttributesPercentage => Math.Max(0, 0.4f + AttributesFocusPercentage * AbilityUser.focus);
         
         public CloneAbility(GridEntity user) : base(user)
         {
@@ -36,16 +36,16 @@ namespace Ability.Abilities
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return targetEntity is null;
+            return targetEntity is null && AbilityUser.maxHealth * HealthPercentage > 4;
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
             GameArena.Instance.SpawnAlly(position,
-                HealthDecreasePercentage * AbilityUser.maxHealth,
-                AttributesDecreasePercentage * AbilityUser.strength,
-                AttributesDecreasePercentage * AbilityUser.focus,
-                AttributesDecreasePercentage * AbilityUser.agility);
+                HealthPercentage * AbilityUser.maxHealth,
+                AttributesPercentage * AbilityUser.strength,
+                AttributesPercentage * AbilityUser.focus,
+                AttributesPercentage * AbilityUser.agility);
             
             onFinish.Invoke();
             yield return null;
