@@ -19,8 +19,10 @@ namespace Ability
 
         public bool CanUse(BaseAbility ability, Vector3 position, GridEntity targetEntity)
         {
-            if (TurnManager.Instance.CurrentTurn != ability.AbilityUser)
+            if (TurnManager.Instance.CurrentTurn != ability.AbilityUser && ability.AbilityUser is EnemyEntity enemy)
             {
+                enemy.movesQueue = null;
+                enemy.targetPos = null;
                 return false;
             }
             
@@ -59,12 +61,13 @@ namespace Ability
 
             StartCoroutine(ability.Execute(position, targetEntity, () =>
             {
-                if (turnManager.ActionPoints == 0)
-                {
-                    turnManager.NextTurn();
-                }
                 onSuccess();
             }));
+            
+            if (turnManager.ActionPoints == 0)
+            {
+                turnManager.NextTurn();
+            }
         }
     }
 }

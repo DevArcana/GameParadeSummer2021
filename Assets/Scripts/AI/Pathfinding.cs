@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Arena;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ namespace AI
             }
         }
 
-        private List<PathNode> FindPath(int startX, int startY, int endX, int endY)
+        public Queue<Vector2Int> FindPath(int startX, int startY, int endX, int endY)
         {
 
             if (startX > _width || endX > _width || startX < 0 || endX < 0 || startY > _height || endY > _height ||
@@ -67,7 +68,7 @@ namespace AI
                 var currentNode = GetLowerFCostNode(_openList);
                 if (currentNode == endNode)
                 {
-                    return CalculatePath(endNode);
+                    return new Queue<Vector2Int>(CalculatePath(endNode).Select(step => new Vector2Int(step.x, step.y)).ToList());
                 }
 
                 _openList.Remove(currentNode);
@@ -76,7 +77,7 @@ namespace AI
                 foreach (var neighbourNode in GetNeighbourList(currentNode))
                 {
                     if (_closedList.Contains(neighbourNode)) continue;
-                    if (!neighbourNode.isWalkable)
+                    if (!neighbourNode.isWalkable && neighbourNode != endNode)
                     {
                         _closedList.Add(neighbourNode);
                         continue;
@@ -123,12 +124,31 @@ namespace AI
             
             return neighbourList;
         }
+
+        public Vector2Int? FindTarget(int startX, int startY)
+        {
+            var grid = GameArena.Instance.Grid;
+            var lowestDistance = int.MaxValue;
+            int endX = 0, endY = 0;
+            foreach (var (x, y, gridEntity) in grid)
+            {
+                if (!(gridEntity is PlayerEntity)) continue;
+                var distance = Mathf.Abs(startX - x) + Mathf.Abs(startY - y);
+                if (distance >= lowestDistance) continue;
+                lowestDistance = distance;
+                endX = x;
+                endY = y;
+            }
+
+            if (lowestDistance == int.MaxValue) return null;
+            return new Vector2Int(endX, endY);
+        }
         
         private List<PathNode> CalculatePath(PathNode endNode)
         {
             var path = new List<PathNode>();
             var currentNode = endNode;
-            while (currentNode.previousNode != null)
+            while (currentNode.previousNode.previousNode != null)
             {
                 path.Add(currentNode.previousNode);
                 currentNode = currentNode.previousNode;

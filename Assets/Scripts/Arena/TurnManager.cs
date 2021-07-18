@@ -111,9 +111,11 @@ namespace Arena
             OnTurnEnded(last);
             var delay = 0.25f;
 
-            if (last is EnemyEntity)
+            if (last is EnemyEntity enemy)
             {
                 delay = 0;
+                enemy.targetPos = null;
+                enemy.movesQueue = null;
             }
             StartCoroutine(Delay(0.25f, () =>
             {
