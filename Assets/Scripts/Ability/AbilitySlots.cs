@@ -30,9 +30,14 @@ namespace Ability
 
         public void PopulateAbilities(GridEntity entity)
         {
-            SetAbility(0, AbilityFactory.GetRandomAbility(entity));
-            SetAbility(1, AbilityFactory.GetRandomAbility(entity));
-            SetAbility(2, AbilityFactory.GetRandomAbility(entity));
+            var random = new Random();
+
+            const double secondSlotTwoCostProbability = 0.5;
+            const double thirdSlotThreeCostProbability = 0.5;
+            
+            SetAbility(0, AbilityFactory.GetRandomOneCostAbility(entity));
+            SetAbility(1, random.NextDouble() <= secondSlotTwoCostProbability ? AbilityFactory.GetRandomTwoCostAbility(entity) : AbilityFactory.GetRandomOneCostAbility(entity));
+            SetAbility(2, random.NextDouble() <= thirdSlotThreeCostProbability ? AbilityFactory.GetRandomThreeCostAbility(entity) : AbilityFactory.GetRandomTwoCostAbility(entity));
         }
 
         public void SetAbility(int slot, BaseAbility ability)
