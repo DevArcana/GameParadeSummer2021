@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Piercing Arrow";
-        public override string Tooltip => $"Fire a piercing arrow in any cardinal direction that deals {Damage} (2 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit. This damage ignores armour.";
+        public override string Tooltip => $"Fire an arrow in any cardinal direction that deals {Damage} (2 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit. This damage ignores armour.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -20,7 +20,7 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public float StrengthPercentage = 0.75f;
+        public float StrengthPercentage = 1.25f;
         public float Damage => 2 + StrengthPercentage * AbilityUser.strength;
         
         public PiercingArrowAbility(GridEntity user) : base(user)

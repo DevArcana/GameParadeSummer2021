@@ -12,14 +12,14 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Move";
-        public override string Tooltip => $"Move up to {Distance} (1 + {AgilityPercentage.ToPercentage()} AGL) tile(s) in any cardinal direction.";
+        public override string Tooltip => $"Move up to {Distance} (1 + {AgilityPercentage.ToPercentage()} Agility) tile(s) in any cardinal direction.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Mobility,
             AbilityTag.AreaTargeted
         };
 
-        public float AgilityPercentage = 0.25f;
+        public float AgilityPercentage = 0.125f;
         public int Distance => (int) (1 + AgilityPercentage * AbilityUser.agility);
 
         public BasicMoveAbility(GridEntity user) : base(user)

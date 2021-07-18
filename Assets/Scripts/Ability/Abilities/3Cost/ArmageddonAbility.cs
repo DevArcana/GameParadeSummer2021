@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Armageddon";
-        public override string Tooltip => $"Deal {Damage} (4 + {StrengthPercentage.ToPercentage()} STR) damage to ALL units - yourself, ally and enemy.";
+        public override string Tooltip => $"Deal {Damage} (4 + {StrengthPercentage.ToPercentage()} Strength) damage to ALL units - yourself, ally and enemy.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,

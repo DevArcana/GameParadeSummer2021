@@ -11,7 +11,7 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Heal Player";
-        public override string Tooltip => $"Restore {Heal} (3 + {FocusPercentage.ToPercentage()} FOC) health to yourself.";
+        public override string Tooltip => $"Restore {Heal} (5 + {FocusPercentage.ToPercentage()} Focus) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Healing,
@@ -19,7 +19,7 @@ namespace Ability.Abilities
         };
 
         public float FocusPercentage = 0.5f;
-        public float Heal => 3 + FocusPercentage * AbilityUser.focus;
+        public float Heal => 5 + FocusPercentage * AbilityUser.focus;
         
         public HealPlayerAbility(GridEntity user) : base(user)
         {

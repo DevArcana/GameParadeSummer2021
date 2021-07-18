@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Slam Dash";
-        public override string Tooltip => $"Dash up to {Distance} (3 + {AgilityPercentage.ToPercentage()} Agility) units in any cardinal direction, ignoring any enemies on the way. After landing, deal {Damage} (3 + {StrengthPercentage.ToPercentage()} Strength) to all enemies in a square area next to you.";
+        public override string Tooltip => $"Dash up to {Distance} (3 + {AgilityPercentage.ToPercentage()} Agility) units in any cardinal direction, ignoring any enemies on the way. After landing, deal {Damage} (3 + {StrengthPercentage.ToPercentage()} Strength) to all enemies in a square area around you.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
@@ -21,7 +21,7 @@ namespace Ability.Abilities
         public float AgilityPercentage = 0.5f;
         public int Distance => (int) (3 + AgilityPercentage * AbilityUser.agility);
 
-        public float StrengthPercentage = 0.5f;
+        public float StrengthPercentage = 0.75f;
         public float Damage => 3 + StrengthPercentage * AbilityUser.strength;
         
         public SlamDashAbility(GridEntity user) : base(user)
@@ -37,7 +37,9 @@ namespace Ability.Abilities
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
         {
-            return targetEntity is null;
+            var arena = GameArena.Instance;
+            arena.Grid.WorldToGrid(position, out var x, out var y);
+            return arena.CanMove(AbilityUser, x, y);
         }
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)

@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Massacre";
-        public override string Tooltip => $"Deal {Damage} (2 + {StrengthPercentage.ToPercentage()} STR) damage to all enemy units.";
+        public override string Tooltip => $"Deal {Damage} (2 + {StrengthPercentage.ToPercentage()} Strength) damage to all enemy units.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,

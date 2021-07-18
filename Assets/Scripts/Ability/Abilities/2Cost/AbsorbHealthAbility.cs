@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Absorb Health";
-        public override string Tooltip => $"Deal {Damage} (3 + {StrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit and restore {Heal} (1 + {FocusPercentage.ToPercentage()} FOC) health to yourself.";
+        public override string Tooltip => $"Deal {Damage} (3 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit and restore {Heal} (4 + {FocusPercentage.ToPercentage()} Focus) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -22,11 +22,11 @@ namespace Ability.Abilities
             AbilityTag.Ranged
         };
 
-        public float StrengthPercentage = 0.5f;
+        public float StrengthPercentage = 0.75f;
         public float Damage => 3 + StrengthPercentage * AbilityUser.strength;
 
         public float FocusPercentage = 0.5f;
-        public float Heal => 1 + FocusPercentage * AbilityUser.focus;
+        public float Heal => 4 + FocusPercentage * AbilityUser.focus;
         
         public AbsorbHealthAbility(GridEntity user) : base(user)
         {

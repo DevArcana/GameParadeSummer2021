@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Execute";
-        public override string Tooltip => $"Deal {Damage} (2 + {DamageStrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit. If targeted unit has {ExecuteThreshold} (4 + {ExecuteStrengthPercentage.ToPercentage()} STR) or less health, execute it.";
+        public override string Tooltip => $"Deal {Damage} (2 + {DamageStrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit. If targeted unit has {ExecuteThreshold} (4 + {ExecuteStrengthPercentage.ToPercentage()} Strength) or less health, execute it.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,

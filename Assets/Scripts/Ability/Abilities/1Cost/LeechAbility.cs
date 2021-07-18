@@ -12,18 +12,18 @@ namespace Ability.Abilities
         public override int Cost => 1;
 
         public override string Name => "Leech";
-        public override string Tooltip => $"Deal {Damage} (4 - {DamageFocusPercentage.ToPercentage()} FOC) damage to a targeted allied unit and restore {Heal} (2 + {HealFocusPercentage.ToPercentage()} FOC) health to yourself.";
+        public override string Tooltip => $"Deal {Damage} (3 - {DamageFocusPercentage.ToPercentage()} Focus) damage to a targeted allied unit (ignores armour) and restore {Heal} (4 + {HealFocusPercentage.ToPercentage()} Focus) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Healing,
             AbilityTag.AllyTargeted
         };
 
-        public float DamageFocusPercentage = 1.0f;
-        public float Damage => Math.Max(0, 4 - DamageFocusPercentage * AbilityUser.focus);
+        public float DamageFocusPercentage = 0.5f;
+        public float Damage => Math.Max(0, 3 - DamageFocusPercentage * AbilityUser.focus);
 
         public float HealFocusPercentage = 0.5f;
-        public float Heal => 2 + HealFocusPercentage * AbilityUser.focus;
+        public float Heal => 4 + HealFocusPercentage * AbilityUser.focus;
         
         public LeechAbility(GridEntity user) : base(user)
         {
@@ -43,7 +43,7 @@ namespace Ability.Abilities
 
         public override IEnumerator Execute(Vector3 position, GridEntity targetEntity, Action onFinish)
         {
-            targetEntity.TakeDamage(Damage);
+            targetEntity.TakeDamage(Damage, true);
             AbilityUser.Heal(Heal);
             
             onFinish.Invoke();

@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Salvation";
-        public override string Tooltip => $"Restore {Heal} (3 + {FocusPercentage.ToPercentage()} FOC) health to all allied units.";
+        public override string Tooltip => $"Restore {Heal} (4 + {FocusPercentage.ToPercentage()} Focus) health to all allied units.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Healing,
@@ -21,7 +21,7 @@ namespace Ability.Abilities
         };
 
         public float FocusPercentage = 0.5f;
-        public float Heal => 3 + FocusPercentage * AbilityUser.focus;
+        public float Heal => 4 + FocusPercentage * AbilityUser.focus;
         
         public SalvationAbility(GridEntity user) : base(user)
         {

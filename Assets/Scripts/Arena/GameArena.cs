@@ -60,9 +60,9 @@ namespace Arena
         private void SpawnEnemies(int wave)
         {
             var newEnemies = new List<(int, int)>();
-            var health = 3.0f + wave;
-            var armour = Math.Max(0, -5.0f + wave);
-            var strength = 0.5f + 0.5f * wave;
+            var health = 2.0f + wave;
+            var armour = Math.Max(0, -3.0f + wave);
+            var strength = 1.5f + 0.5f * wave;
             var focus = 0.5f + 0.5f * wave;
             var agility = 0.5f + 0.5f * wave;
 
@@ -91,13 +91,8 @@ namespace Arena
             Grid.WorldToGrid(position, out var x, out var y);
             position = Grid.GridToWorld(x, y) + new Vector3(0.5f, 0.0f, 0.5f);
 
-            var obj = Instantiate(allyPrefab, position, Quaternion.identity).GetComponent<PlayerEntity>();
-            obj.maxHealth = health;
-            obj.health = health;
-            obj.healthBar.SetHealth(health, health);
-            obj.strength = strength;
-            obj.focus = focus;
-            obj.agility = agility;
+            var entity = Instantiate(allyPrefab, position, Quaternion.identity).GetComponent<PlayerEntity>();
+            entity.SetAttributes(health, 0, strength, focus, agility);
         }
 
         public IEnumerator Move(GridEntity entity, int x, int y, [CanBeNull] Action onFinish = null)
