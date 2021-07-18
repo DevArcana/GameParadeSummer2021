@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 2;
 
         public override string Name => "Absorb Health";
-        public override string Tooltip => $"Deal {Damage} (3 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit and restore {Heal} (4 + {FocusPercentage.ToPercentage()} Focus) health to yourself.";
+        public override string Tooltip => $"Deal {Damage} (3 + {StrengthPercentage.ToPercentage()} Strength) damage to a targeted enemy unit in a diamond-shaped area of radius 2 around you and restore {Heal} (4 + {FocusPercentage.ToPercentage()} Focus) health to yourself.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             AbilityTag.Damage,
@@ -34,7 +34,9 @@ namespace Ability.Abilities
 
         public override List<Vector2Int> GetArea()
         {
-            return GameArena.Instance.Grid.GetWholeGrid().ToList();
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return grid.GetFilledDiamondArea(x, y, 2).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)

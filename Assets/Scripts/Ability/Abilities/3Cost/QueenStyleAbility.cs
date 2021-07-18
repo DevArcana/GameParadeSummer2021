@@ -12,14 +12,14 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Queen Style";
-        public override string Tooltip => $"Move any number of units in any direction, cardinal or ordinal, to a tile not occupied by an ally. If you move to a tile occupied by an enemy, execute it. After the move, gain {ArmourIncrease} ({FocusPercentage.ToPercentage()} Focus) armour.";
+        public override string Tooltip => $"Move any number of units in any direction, cardinal or ordinal, to a tile not occupied by an ally. If you move to a tile occupied by an enemy, execute it and gain {ArmourIncrease} (3 + {FocusPercentage.ToPercentage()} Focus) armour.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
         };
 
         public float FocusPercentage = 1.0f;
-        public float ArmourIncrease => 5 + FocusPercentage * AbilityUser.focus;
+        public float ArmourIncrease => 3 + FocusPercentage * AbilityUser.focus;
         
         public QueenStyleAbility(GridEntity user) : base(user)
         {
@@ -60,9 +60,9 @@ namespace Ability.Abilities
             if (!(entity is null) && entity.GetType() != AbilityUser.GetType())
             {
                 entity.Execute();
+                AbilityUser.armour += ArmourIncrease;
             }
 
-            AbilityUser.armour += ArmourIncrease;
             
             onFinish.Invoke();
             yield return null;
