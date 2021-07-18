@@ -42,7 +42,7 @@ namespace Visuals
 
             foreach (var field in area)
             {
-                var position = grid.GridToWorld(field.x, field.y) + new Vector3(0.5f, 0.1f, 0.5f);
+                var position = grid.GridToWorld(field.x, field.y) + new Vector3(0.5f, 0.01f, 0.5f);
                 var instance = Instantiate(tilePrefab, position, Quaternion.identity, transform);
             
                 _fields.Add(instance.gameObject);

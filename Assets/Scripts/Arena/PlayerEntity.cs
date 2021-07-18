@@ -24,7 +24,8 @@ namespace Arena
             TurnManager.Instance.TurnEnded += OnTurnEnd;
             
             abilitySlots.AbilitySelectionChanged += OnAbilitySelectionChanged;
-            abilitySlots.Deselect();
+            
+            AbilityAreaDisplay.Instance.DisplayAreaFor(TurnManager.Instance.EnqueuedEntities[0].GetMoveAbility());
         }
 
         public void EnsureValidAttributes()

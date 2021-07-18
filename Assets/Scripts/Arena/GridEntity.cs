@@ -127,5 +127,10 @@ namespace Arena
             
             healthBar.SetHealth(health, maxHealth);
         }
+
+        public BasicMoveAbility GetMoveAbility()
+        {
+            return moveAbility;
+        }
     }
 }
