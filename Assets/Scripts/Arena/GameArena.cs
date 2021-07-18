@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
 using Grid;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -100,6 +101,26 @@ namespace Arena
             Grid[x, y] = null;
 
             yield return entity.Move(new Vector3(pos.x + 0.5f, pos.y, pos.z + 0.5f), onFinish);
+        }
+
+        public IEnumerator Swap(GridEntity firstEntity, GridEntity secondEntity, [CanBeNull] Action onFinish = null)
+        {
+            Grid.WorldToGrid(firstEntity.transform.position, out var firstX, out var firstY);
+            Grid.WorldToGrid(secondEntity.transform.position, out var secondX, out var secondY);
+
+            var firstNewPos = Grid.GridToWorld(secondX, secondY);
+            var secondNewPos = Grid.GridToWorld(firstX, firstY);
+            
+            Grid[firstX, firstY] = secondEntity;
+            Grid[secondX, secondY] = firstEntity;
+
+            var coroutines = new List<IEnumerator>
+            {
+                firstEntity.Move(new Vector3(firstNewPos.x + 0.5f, firstNewPos.y, firstNewPos.z + 0.5f)),
+                secondEntity.Move(new Vector3(secondNewPos.x + 0.5f, secondNewPos.y, secondNewPos.z + 0.5f))
+            };
+
+            yield return this.WaitAllCoroutine(coroutines, onFinish);
         }
 
         private void OnDestroy()

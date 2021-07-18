@@ -77,9 +77,9 @@ namespace Arena
             finish?.Invoke();
         }
 
-        public void TakeDamage(float amount)
+        public void TakeDamage(float amount, bool ignoreArmour = false)
         {
-            if (armour > 0)
+            if (armour > 0 && !ignoreArmour)
             {
                 if (amount > armour)
                 {

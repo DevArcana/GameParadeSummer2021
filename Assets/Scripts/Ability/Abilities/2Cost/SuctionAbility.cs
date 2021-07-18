@@ -8,7 +8,7 @@ namespace Ability.Abilities
 {
     public class SuctionAbility : BaseAbility
     {
-        public override int Cost => 1;
+        public override int Cost => 2;
 
         public override string Name => "Suction";
         public override string Tooltip => $"Deal {Damage} (2 + {StrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit and increase your strength by {StrengthIncrease} (0.5 + {FocusPercentage.ToPercentage()} FOC).";

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Arena;
 using UnityEngine;
 
@@ -26,6 +27,13 @@ namespace Ability.Abilities
         
         public LeechAbility(GridEntity user) : base(user)
         {
+        }
+
+        public override List<Vector2Int> GetArea()
+        {
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return grid.GetAllAllies(new Vector2Int(x, y)).ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Arena;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Ability.Abilities
 {
     public class ExecuteAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
         public override string Name => "Execute";
         public override string Tooltip => $"Deal {Damage} (2 + {DamageStrengthPercentage.ToPercentage()} STR) damage to a targeted enemy unit. If targeted unit has {ExecuteThreshold} (4 + {ExecuteStrengthPercentage.ToPercentage()} STR) or less health, execute it.";
@@ -28,6 +29,13 @@ namespace Ability.Abilities
         
         public ExecuteAbility(GridEntity user) : base(user)
         {
+        }
+
+        public override List<Vector2Int> GetArea()
+        {
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return grid.GetAllEnemies().ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)

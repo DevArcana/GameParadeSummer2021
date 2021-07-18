@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Arena;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Ability.Abilities
 {
     public class ArmageddonAbility : BaseAbility
     {
-        public override int Cost => 2;
+        public override int Cost => 3;
 
         public override string Name => "Armageddon";
         public override string Tooltip => $"Deal {Damage} (4 + {StrengthPercentage.ToPercentage()} STR) damage to ALL units - yourself, ally and enemy.";
@@ -24,6 +25,13 @@ namespace Ability.Abilities
         
         public ArmageddonAbility(GridEntity user) : base(user)
         {
+        }
+
+        public override List<Vector2Int> GetArea()
+        {
+            var grid = GameArena.Instance.Grid;
+            grid.WorldToGrid(AbilityUser.transform.position, out var x, out var y);
+            return grid.GetAllEntities().ToList();
         }
 
         public override bool CanExecute(Vector3 position, GridEntity targetEntity)
