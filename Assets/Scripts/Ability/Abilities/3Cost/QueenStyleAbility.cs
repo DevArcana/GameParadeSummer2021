@@ -12,7 +12,7 @@ namespace Ability.Abilities
         public override int Cost => 3;
 
         public override string Name => "Queen Style";
-        public override string Tooltip => $"Move any number of units in any direction, cardinal or ordinal, to a tile not occupied by an ally. If you move to a tile occupied by an enemy, execute it. After the move, gain {ArmourIncrease} ({FocusPercentage.ToPercentage()} Focus) armour.";
+        public override string Tooltip => $"Move any number of units in any direction, cardinal or ordinal, to a tile not occupied by an ally. If you move to a tile occupied by an enemy, execute it. After the move, gain {ArmourIncrease} (5 + {FocusPercentage.ToPercentage()} Focus) armour.";
         public override HashSet<AbilityTag> Tags => new HashSet<AbilityTag>
         {
             
